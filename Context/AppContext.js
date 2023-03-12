@@ -8,5 +8,19 @@ export const appContext = createContext();
 export const AppProvider = ({ children }) => {
   //variables
 
-  return <appContext.Provider value={{}}>{children}</appContext.Provider>;
+  const [contentId, setContentId] = useState("")
+  const handleNav = (e) => {
+    let getId = e.target.id;
+    if (getId == "home") {
+      setContentId("home");
+    } else if (getId == "about") {
+      setContentId("about");
+    } else if (getId == "contact-us") {
+      setContentId("contact-us");
+    } else {
+      setContentId("");
+    }
+  };
+
+  return <appContext.Provider value={{contentId, handleNav}}>{children}</appContext.Provider>;
 };
