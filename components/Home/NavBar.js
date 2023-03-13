@@ -1,6 +1,5 @@
 import { appContext } from "@/Context/AppContext";
 import React, { useContext } from "react";
-import Content from "./Content";
 
 export default function NavBar() {
   const { handleNav } = useContext(appContext);

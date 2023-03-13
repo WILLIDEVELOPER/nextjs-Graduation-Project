@@ -8,7 +8,7 @@ export const appContext = createContext();
 export const AppProvider = ({ children }) => {
   //variables
 
-  const [contentId, setContentId] = useState("")
+  const [contentId, setContentId] = useState("home")
   const handleNav = (e) => {
     let getId = e.target.id;
     if (getId == "home") {
