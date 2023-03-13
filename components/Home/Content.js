@@ -59,7 +59,7 @@ export default function Content({ ruta }) {
   } else if (ruta == "contact-us") {
     return (
       <div
-        className="bg-[#161520] w-full h-[41.3rem]  flex flex-col justify-center items-center"
+        className="bg-[#161520] w-full  flex flex-col justify-center items-center"
       >
         <div className="bg-[#161520] p-[2rem]">
           <h1 className="mb-[1.5rem] text-white text-center font-extrabold text-4xl p-[0.5rem]">
