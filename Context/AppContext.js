@@ -11,15 +11,7 @@ export const AppProvider = ({ children }) => {
   const [contentId, setContentId] = useState("home")
   const handleNav = (e) => {
     let getId = e.target.id;
-    if (getId == "home") {
-      setContentId("home");
-    } else if (getId == "about") {
-      setContentId("about");
-    } else if (getId == "contact-us") {
-      setContentId("contact-us");
-    } else {
-      setContentId("");
-    }
+    setContentId(getId)
   };
 
   return <appContext.Provider value={{contentId, handleNav}}>{children}</appContext.Provider>;

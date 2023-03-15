@@ -12,23 +12,23 @@ export default function NavBar() {
             src="https://pic.onlinewebfonts.com/svg/img_329115.png"
             alt=""
           />
-          <ul className="flex gap-[1.5rem] font-bold text-[1.15rem] ">
-            <li className="cursor-pointer" id="home" onClick={handleNav}>
+          <ul className="flex gap-[1.5rem]  font-bold text-[1.15rem] ">
+            <li className="cursor-pointer  hover:brightness-50" id="home" onClick={handleNav}>
               Inicio
             </li>
-            <li className="cursor-pointer" id="about" onClick={handleNav}>
-              Acerca de{" "}
+            <li className="cursor-pointer hover:brightness-50" id="about" onClick={handleNav}>
+              Acerca de
             </li>
-            <li className="cursor-pointer" id="contact-us" onClick={handleNav}>
+            <li className="cursor-pointer hover:brightness-50 " id="contact-us" onClick={handleNav}>
               Contactanos
             </li>
           </ul>
         </div>
         <div className="flex gap-[1rem] items-center font-bold text-[1.15rem]">
-          <button className="hover:bg-[#865DFF] rounded-xl p-[0.5rem]">
+          <button onClick={handleNav} id="login" className="hover:bg-[#865DFF] focus:bg-[#865DFF] rounded-xl p-[0.5rem]">
             Iniciar Sesion
           </button>
-          <button className="hover:bg-[#865DFF] rounded-xl p-[0.5rem]">
+          <button id="register" onClick={handleNav} className="hover:bg-[#865DFF] focus:bg-[#865DFF] rounded-xl p-[0.5rem]">
             Registrarse
           </button>
         </div>

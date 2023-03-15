@@ -1,4 +1,6 @@
 import React from "react";
+import Login from "../Auth/login";
+import Register from "../Auth/register";
 
 export default function Content({ ruta }) {
   const style = {
@@ -59,7 +61,7 @@ export default function Content({ ruta }) {
   } else if (ruta == "contact-us") {
     return (
       <div
-        className="bg-[#161520] w-full  flex flex-col justify-center items-center"
+        className="bg-[#161520] w-full h-full  flex flex-col justify-center items-center"
       >
         <div className="bg-[#161520] p-[2rem]">
           <h1 className="mb-[1.5rem] text-white text-center font-extrabold text-4xl p-[0.5rem]">
@@ -89,7 +91,17 @@ export default function Content({ ruta }) {
         </div>
       </div>
     );
-  } else if (ruta == "signup") {
-  } else if (ruta == "signin") {
+  } else if (ruta == "login") {
+    return (
+      <div  className="bg-[#161520] w-full h-full flex flex-col justify-center items-center">
+        <Login/>
+      </div> 
+    )
+  } else if (ruta == "register") {
+    return (
+      <div className="bg-[#161520] w-full h-full flex flex-col justify-center items-center">
+          <Register/>
+      </div>
+    )
   }
 }
