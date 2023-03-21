@@ -1,24 +1,28 @@
-import React from "react";
+import { appContext } from "@/Context/AppContext";
+import React, { use, useContext } from "react";
 import Login from "../Auth/login";
 import Register from "../Auth/register";
 
 export default function Content({ ruta }) {
+
+  const {handleContent } = useContext(appContext)
+
   const style = {
     "--opacidad-negro": 0.7,
     backgroundImage:
-      'linear-gradient(rgba(0, 0, 0, var(--opacidad-negro)), rgba(0, 0, 0, var(--opacidad-negro))), url("img/background__welcome.jpg")',
+      'linear-gradient(rgba(0, 0, 0, var(--opacidad-negro)), rgba(0, 0, 0, var(--opacidad-negro)))',
   };
   if (ruta == "home") {
     return (
       <div
         style={style}
-        className="w-full h-[41.3rem]  flex justify-center items-center"
+        className="w-full h-full  flex justify-center items-center"
       >
         <div className="text-center flex flex-col items-center gap-[4rem] p-[5rem]">
           <h1 className="text-[#865DFF] font-extrabold text-7xl">
             Bienvenido Egresado
           </h1>
-          <button className="bg-[#865DFF] text-xl text-white font-bold hover:bg-[#9776f9]   w-[10rem] h-[3.5rem] py-[0.5rem] rounded-lg">
+          <button id="register" onClick={handleContent} className="bg-[#865DFF] text-xl text-white font-bold hover:bg-[#9776f9]   w-[10rem] h-[3.5rem] py-[0.5rem] rounded-lg">
             Empezar
           </button>
         </div>
@@ -28,7 +32,7 @@ export default function Content({ ruta }) {
     return (
       <div
         style={style}
-        className="w-full px-[1.2rem] h-[41.3rem] flex  items-center gap-[1rem]"
+        className="w-full px-[1.2rem] h-full flex  justify-center items-center gap-[1rem]"
       >
         <div className="w-[45rem] flex flex-col ">
           <h1 className="text-[#865DFF] text-center font-bold text-4xl p-[0.5rem]">
@@ -48,13 +52,10 @@ export default function Content({ ruta }) {
             </span>
           </p>
           <div className="w-full flex justify-center">
-            <button className="bg-[#865DFF] text-[1.3rem] text-white font-bold hover:bg-[#9776f9]   h-[3.5rem] px-[0.9rem] py-[0.5rem] rounded-xl">
+            <button id="contact-us" onClick={handleContent} className="bg-[#865DFF] text-[1.3rem] text-white font-bold hover:bg-[#9776f9]   h-[3.5rem] px-[0.9rem] py-[0.5rem] rounded-xl">
               Contactanos
             </button>
           </div>
-        </div>
-        <div className="w-[45rem]">
-          <img src="https://imgs.search.brave.com/PV-vp2jW0-b_EmXFeqthcpNkaXT2sw-EwAMyMf0a06w/rs:fit:800:609:1/g:ce/aHR0cDovL2l0bi5l/ZHUuY28vd2ViL2lt/YWdlcy9pbWFnZW5l/c19JVE4vTnVldmFz/L2VncmVzYWRvczIu/anBn"></img>
         </div>
       </div>
     );
