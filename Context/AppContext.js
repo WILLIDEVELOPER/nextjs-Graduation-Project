@@ -29,7 +29,10 @@ export const AppProvider = ({ children }) => {
     password: "",
   });
   const [token, setToken] = useState("");
-  const [userLogged, setUserLogged] = useState({});
+  const [userRoles, setUserRoles] = useState([]);
+
+  //Todo: variables para rol usuario
+  const [getAds, setGetAds] = useState([])
 
   //*Funciones
 
@@ -65,17 +68,20 @@ export const AppProvider = ({ children }) => {
   //? Funciones para el signIn
 
   const validation = (userFound) => {
-    for (let i = 0; i < userFound.roles.length; i++) {
-      if (userFound.roles[i]["name"] == "egresado") {
-        alert("Hola egresado")
-        break;
-      }else if (
-        userFound.roles[i]["name"] == "admin" ||
-        userFound.roles[i]["name"] == "lider universitario"
-      ) {
-        alert(`Hola ${userFound.roles[i]["name"]}`)
-        break;
-      }
+    const roles = userFound.roles.map((role) => role.name);
+
+    // Actualizar el estado de los roles del usuario
+    if (roles.includes("egresado")) {
+      setUserRoles(["egresado"]);
+      router.push("/ads")
+    } else if (roles.includes("admin") && roles.includes("lider universitario")) {
+      setUserRoles(["admin", "lider universitario"]);
+    } else if (roles.includes("admin")) {
+      setUserRoles(["admin"]);
+    } else if (roles.includes("lider universitario")) {
+      setUserRoles(["lider universitario"]);
+    } else {
+      setUserRoles([]);
     }
   };
 
@@ -85,7 +91,6 @@ export const AppProvider = ({ children }) => {
         "https://nodejs-jwt-prueba.vercel.app/api/auth/signin",
         datos
       );
-      setUserLogged(res.userFound);
       setToken(res.token);
       setError("Usuario Autenticado Con Exito");
       validation(res.userFound)
@@ -93,6 +98,7 @@ export const AppProvider = ({ children }) => {
       setError(error.response.data.message);
     }
   };
+
 
   //*Metodos
 
@@ -103,12 +109,26 @@ export const AppProvider = ({ children }) => {
     let newRoles = [...register.roles];
     if (name === "roles") {
       newRoles = value.split(",").map((role) => role.trim());
-    }
-    setRegister({
-      ...register,
-      [name]: name === "roles" ? newRoles : value,
-    });
+      const invalidRole = newRoles.filter(element => {
+        if (newRoles.length > 1) {
+          if (element.includes("egresado")) {
+            return true
+          }
+        }
+        return false;
+      });
+      if (invalidRole.length > 0) {
+        setError("La combinación de roles es inválida: " + invalidRole.join(", "));
+      }else{
+        setError("Role Valido")
+        setRegister({
+          ...register,
+          [name]: name === "roles" ? newRoles : value,
+        });
+      }
+    }  
   };
+  
 
   const handleRegSubmit = (e) => {
     e.preventDefault();
@@ -127,8 +147,19 @@ export const AppProvider = ({ children }) => {
 
   const handleLogSubmit = (e) => {
     e.preventDefault();
-    signIn(login);
+    signIn(login)
   };
+
+  //*Ads View =>User
+
+  useEffect(() => {
+    const getAds = async() =>{
+      const {data: res} = await axios.get("https://nodejs-jwt-prueba.vercel.app/api/ads")
+      setGetAds(res)
+    }
+    getAds() 
+  }, [])
+  
 
   return (
     <appContext.Provider
@@ -148,6 +179,9 @@ export const AppProvider = ({ children }) => {
         contentId,
         handleNav,
         handleContent,
+
+        //? Ads variable
+        getAds,
       }}
     >
       {children}
