@@ -30,6 +30,8 @@ export const AppProvider = ({ children }) => {
   });
   const [token, setToken] = useState("");
   const [userRoles, setUserRoles] = useState([]);
+  const [userLogged, setUserLogged] = useState({})
+
 
   //Todo: variables para rol usuario
   const [getAds, setGetAds] = useState([])
@@ -72,6 +74,7 @@ export const AppProvider = ({ children }) => {
 
     // Actualizar el estado de los roles del usuario
     if (roles.includes("egresado")) {
+      setUserLogged(userFound)
       setUserRoles(["egresado"]);
       router.push("/ads")
     } else if (roles.includes("admin") && roles.includes("lider universitario")) {
@@ -171,6 +174,7 @@ export const AppProvider = ({ children }) => {
         //? Login
         handleLogChange,
         handleLogSubmit,
+        userLogged,
 
         //? Mensaje de errores
         error,

@@ -2,12 +2,12 @@ import { appContext } from "@/Context/AppContext";
 import React, { useContext, useState } from "react";
 
 export default function NavbarU() {
-  const { handleNav } = useContext(appContext);
+  const { handleNav, userLogged } = useContext(appContext);
   const [showMenu, setShowMenu] = useState(false);
 
   return (
     <section onClick={() => setShowMenu(!showMenu)} className="w-screen bg-[#161520] ">
-      <div className="flex justify-between px-[3rem] py-[1rem] gap-[1rem] text-white">
+      <div className="flex justify-between items-center px-[3rem] py-[1rem] gap-[1rem] text-white">
         <div className="flex w-full gap-[1rem] items-center">
           <ul className="flex gap-[1.5rem] w-full  font-bold text-[1.15rem] ">
             <li
@@ -27,6 +27,7 @@ export default function NavbarU() {
             </div>
           </ul>
         </div>
+        <h1 className="capitalize font-bold text-xl">{userLogged.username}</h1>
         <div className="relative hover:bg-red-50 rounded-full">
           <img
             className="w-[4rem] rounded-full cursor-pointer"
