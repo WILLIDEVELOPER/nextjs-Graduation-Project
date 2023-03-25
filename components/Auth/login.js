@@ -40,7 +40,7 @@ export default function Login() {
         <a
           id="register"
           onClick={handleContent}
-          className="text-center text-slate-500 font-bold hover:underline"
+          className="text-center cursor-pointer text-slate-500 font-bold hover:underline"
         >
           ¿No tienes una cuenta?
         </a>

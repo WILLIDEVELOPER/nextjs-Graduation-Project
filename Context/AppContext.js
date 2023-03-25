@@ -162,11 +162,19 @@ export const AppProvider = ({ children }) => {
     }
     getAds() 
   }, [])
+
+
+  //* Peril usuario
+
+  
   
 
   return (
     <appContext.Provider
       value={{
+
+        router,
+
         //? Registro
         handleRegSubmit,
         handleRegChange,

@@ -64,7 +64,7 @@ export default function Register() {
         <a
           id="login"
           onClick={handleContent}
-          className="text-center text-slate-500 font-bold hover:underline"
+          className="text-center cursor-pointer text-slate-500 font-bold hover:underline"
         >
           ¿Tienes una cuenta?
         </a>

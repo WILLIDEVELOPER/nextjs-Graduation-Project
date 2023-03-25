@@ -2,7 +2,7 @@ import { appContext } from "@/Context/AppContext";
 import React, { useContext, useState } from "react";
 
 export default function NavbarU() {
-  const { handleNav, userLogged } = useContext(appContext);
+  const { handleNav, userLogged, router } = useContext(appContext);
   const [showMenu, setShowMenu] = useState(false);
 
   return (
@@ -38,8 +38,10 @@ export default function NavbarU() {
           {showMenu && (
             <div className="absolute top-[4.75rem] right-[-2.9rem] w-[10rem] bg-[#161520] p-[1rem]">
               <ul className="list-none">
-                <li>Perfil</li>
-                <li>Cerrar Sesion</li>
+                <li className="cursor-pointer" onClick={() =>{
+                  router.push("./profile")
+                }}>Perfil</li>
+                <li className="cursor-pointer">Cerrar Sesion</li>
               </ul>
             </div>
           )}
