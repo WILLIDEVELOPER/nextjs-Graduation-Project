@@ -40,6 +40,7 @@ export const AppProvider = ({ children }) => {
 
   //? Content del home
   const handleNav = (e) => {
+    
     getId = e.target.id;
     setContentId(getId);
   };
@@ -152,7 +153,7 @@ export const AppProvider = ({ children }) => {
     e.preventDefault();
     signIn(login)
   };
-
+  const rutaActual = router.asPath;
   //*Ads View =>User
 
   useEffect(() => {
@@ -160,8 +161,11 @@ export const AppProvider = ({ children }) => {
       const {data: res} = await axios.get("https://nodejs-jwt-prueba.vercel.app/api/ads")
       setGetAds(res)
     }
+    
+
+    (rutaActual == "/profile") ? setContentId("HomeUser") : setContentId("home")
     getAds() 
-  }, [])
+  }, [rutaActual])
 
 
   //* Peril usuario

@@ -10,7 +10,7 @@ export default function ErrorAd() {
       <a
           id="error"
           onClick={() =>{
-            router.back()
+            router.push("/")
           }}
           className="text-center text-slate-500 font-bold "
         >
