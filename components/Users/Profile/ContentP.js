@@ -2,7 +2,8 @@ import { appContext } from "@/Context/AppContext";
 import React, { useContext } from "react";
 
 export default function ContentP() {
-  let { contentId, router  } = useContext(appContext);
+  let { contentId, handleUpdateChange, handleUptSubmit } =
+    useContext(appContext);
   const style = {
     width: "calc(100vw - 13rem)",
   };
@@ -18,7 +19,9 @@ export default function ContentP() {
               <div className="flex w-full flex-col gap-[0.3rem]">
                 <label>Usuario</label>
                 <input
+                  name="username"
                   type="text"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Nombre de Usuario"
                 />
@@ -27,6 +30,8 @@ export default function ContentP() {
                 <label>Correo Electronico</label>
                 <input
                   type="text"
+                  name="email"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="name@gmail.com"
                 />
@@ -37,43 +42,31 @@ export default function ContentP() {
                 <label>Contraseña</label>
                 <input
                   type="password"
+                  name="password"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="**********"
                 />
+                
               </div>
               <div className="flex w-full flex-col gap-[0.3rem]">
-                <label>Role</label>
-                <input
-                  type="text"
-                  disabled
-                  className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
-                  placeholder="Role Name"
-                />
-              </div>
-            </div>
-            <div className="flex w-full gap-[1rem] justify-around ">
-              <div className="flex w-full flex-col gap-[0.3rem]">
-                <label>Puesto de Trabajo</label>
-                <input
-                  type="text"
-                  className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
-                  placeholder="Programador"
-                />
-              </div>
-              <div className="flex w-full flex-col gap-[0.3rem]">
-                <label>Compañia</label>
-                <input
-                  type="text"
-                  className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
-                  placeholder="Nombre de la compañia de trabajo"
-                />
-              </div>
+                  <label>Puesto de Trabajo</label>
+                  <input
+                    type="text"
+                    name="jobTitle"
+                    onChange={handleUpdateChange}
+                    className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
+                    placeholder="Programador"
+                  />
+                </div>
             </div>
             <div className="flex w-full gap-[1rem] justify-around ">
               <div className="flex w-full flex-col gap-[0.3rem]">
                 <label>Sector</label>
                 <input
                   type="text"
+                  name="sector"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Medico, informatico"
                 />
@@ -82,6 +75,8 @@ export default function ContentP() {
                 <label>Pais</label>
                 <input
                   type="text"
+                  name="country"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Canada"
                 />
@@ -92,6 +87,8 @@ export default function ContentP() {
                 <label>Ciudad</label>
                 <input
                   type="text"
+                  name="city"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Bogota"
                 />
@@ -100,6 +97,8 @@ export default function ContentP() {
                 <label>Descripcion</label>
                 <textarea
                   type="text"
+                  name="about"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Descripcion breve del trabajo"
                 />
@@ -116,7 +115,10 @@ export default function ContentP() {
           </div>
         </div>
         <div>
-          <button className="cursor-pointer w-[10rem] text-2xl bg-[#161520] rounded-xl hover:bg-slate-200 hover:text-slate-800 py-[0.5rem] px-[0.3rem] ">
+          <button
+            onClick={handleUptSubmit}
+            className="cursor-pointer w-[10rem] text-2xl bg-[#161520] rounded-xl hover:bg-slate-200 hover:text-slate-800 py-[0.5rem] px-[0.3rem] "
+          >
             Guardar
           </button>
         </div>
@@ -135,6 +137,8 @@ export default function ContentP() {
                 <label>Titulo</label>
                 <input
                   type="text"
+                  name="experience[0][title]"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Titulo en la compañia"
                 />
@@ -143,26 +147,10 @@ export default function ContentP() {
                 <label>Compañia de Trabajo</label>
                 <input
                   type="text"
+                  name="experience[0][company]"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Company"
-                />
-              </div>
-            </div>
-            <div className="flex w-full gap-[1rem] justify-around ">
-              <div className="flex w-full flex-col gap-[0.3rem]">
-                <label>Fecha De Inicio</label>
-                <input
-                  type="date"
-                  className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
-                  placeholder="00/00/0000"
-                />
-              </div>
-              <div className="flex w-full flex-col gap-[0.3rem]">
-                <label>Fecha De finalizacion</label>
-                <input
-                  type="date"
-                  className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
-                  placeholder="00/00/0000"
                 />
               </div>
             </div>
@@ -171,6 +159,8 @@ export default function ContentP() {
                 <label>Descripcion</label>
                 <textarea
                   type="text"
+                  name="experience[0][description]"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Descripcion breve del trabajo realizado"
                 />
@@ -187,7 +177,10 @@ export default function ContentP() {
           </div>
         </div>
         <div>
-          <button className="cursor-pointer w-[10rem] text-2xl bg-[#161520] rounded-xl hover:bg-slate-200 hover:text-slate-800 py-[0.5rem] px-[0.3rem] ">
+          <button
+            onClick={handleUptSubmit}
+            className="cursor-pointer w-[10rem] text-2xl bg-[#161520] rounded-xl hover:bg-slate-200 hover:text-slate-800 py-[0.5rem] px-[0.3rem] "
+          >
             Guardar
           </button>
         </div>
@@ -206,6 +199,8 @@ export default function ContentP() {
                 <label>Nombre del Instituto</label>
                 <input
                   type="text"
+                  name="education[0][institutionName]"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Institucion"
                 />
@@ -214,6 +209,8 @@ export default function ContentP() {
                 <label>Grado</label>
                 <input
                   type="text"
+                  name="education[0][degree]"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Grado"
                 />
@@ -224,6 +221,8 @@ export default function ContentP() {
                 <label>Carrera</label>
                 <input
                   type="text"
+                  name="education[0][fieldOfStudy]"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Ingenieria de Sistemas"
                 />
@@ -231,27 +230,11 @@ export default function ContentP() {
               <div className="flex w-full flex-col gap-[0.3rem]">
                 <label>Actividades o Sociedades</label>
                 <textarea
-                  type="date"
+                  type="text"
+                  name="education[0][activitiesAndSocieties]"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Grupos o sociedades en las que fue participe"
-                />
-              </div>
-            </div>
-            <div className="flex w-full gap-[1rem] justify-around ">
-              <div className="flex w-full flex-col gap-[0.3rem]">
-                <label>Fecha De Inicio</label>
-                <input
-                  type="date"
-                  className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
-                  placeholder="00/00/0000"
-                />
-              </div>
-              <div className="flex w-full flex-col gap-[0.3rem]">
-                <label>Fecha De finalizacion</label>
-                <input
-                  type="date"
-                  className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
-                  placeholder="00/00/0000"
                 />
               </div>
             </div>
@@ -266,13 +249,16 @@ export default function ContentP() {
           </div>
         </div>
         <div>
-          <button className="cursor-pointer w-[10rem] text-2xl bg-[#161520] rounded-xl hover:bg-slate-200 hover:text-slate-800 py-[0.5rem] px-[0.3rem] ">
+          <button
+            onClick={handleUptSubmit}
+            className="cursor-pointer w-[10rem] text-2xl bg-[#161520] rounded-xl hover:bg-slate-200 hover:text-slate-800 py-[0.5rem] px-[0.3rem] "
+          >
             Guardar
           </button>
         </div>
       </div>
     );
-  }else if (contentId == "Personal") {
+  } else if (contentId == "Personal") {
     return (
       <div
         style={style}
@@ -285,6 +271,8 @@ export default function ContentP() {
                 <label>Nombre Completo</label>
                 <input
                   type="text"
+                  name="personalInfo.fullName"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Nombre y apellido"
                 />
@@ -293,6 +281,8 @@ export default function ContentP() {
                 <label>Fecha de nacimiento</label>
                 <input
                   type="date"
+                  name="personalInfo.birthdate"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="00/00/0000"
                 />
@@ -303,6 +293,8 @@ export default function ContentP() {
                 <label>Direccion</label>
                 <input
                   type="text"
+                  name="personalInfo.address"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Calle # ##-##"
                 />
@@ -311,6 +303,8 @@ export default function ContentP() {
                 <label>Telefono</label>
                 <input
                   type="number"
+                  name="personalInfo.phone"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="123456789"
                 />
@@ -321,6 +315,8 @@ export default function ContentP() {
                 <label>Linkedin</label>
                 <input
                   type="text"
+                  name="personalInfo.linkedin"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="Link de linkedin"
                 />
@@ -329,6 +325,8 @@ export default function ContentP() {
                 <label>Sitio Web</label>
                 <input
                   type="text"
+                  name="personalInfo.website"
+                  onChange={handleUpdateChange}
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="www.mysitioweb.com"
                 />
@@ -345,7 +343,10 @@ export default function ContentP() {
           </div>
         </div>
         <div>
-          <button className="cursor-pointer w-[10rem] text-2xl bg-[#161520] rounded-xl hover:bg-slate-200 hover:text-slate-800 py-[0.5rem] px-[0.3rem] ">
+          <button
+            onClick={handleUptSubmit}
+            className="cursor-pointer w-[10rem] text-2xl bg-[#161520] rounded-xl hover:bg-slate-200 hover:text-slate-800 py-[0.5rem] px-[0.3rem] "
+          >
             Guardar
           </button>
         </div>

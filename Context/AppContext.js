@@ -30,17 +30,49 @@ export const AppProvider = ({ children }) => {
   });
   const [token, setToken] = useState("");
   const [userRoles, setUserRoles] = useState([]);
-  const [userLogged, setUserLogged] = useState({})
-
+  const [userLogged, setUserLogged] = useState({});
 
   //Todo: variables para rol usuario
-  const [getAds, setGetAds] = useState([])
+  const [getAds, setGetAds] = useState([]);
+  const [userUpt, setUserUpt] = useState({
+    username: "",
+    email: "",
+    password: "",
+    profileImage: "",
+    jobTitle: "",
+    sector: "",
+    country: "",
+    city: "",
+    about: "",
+    experience: [
+      {
+        title: "",
+        company: "",
+        description: "",
+      },
+    ],
+    personalInfo: {
+      fullName: "",
+      birthdate: "",
+      address: "",
+      phone: "",
+      linkedin: "",
+      website: "",
+    },
+    education: [
+      {
+        institutionName: "",
+        degree: "",
+        fieldOfStudy: "",
+        activitiesAndSocieties: "",
+      },
+    ],
+  });
 
   //*Funciones
 
   //? Content del home
   const handleNav = (e) => {
-    
     getId = e.target.id;
     setContentId(getId);
   };
@@ -75,10 +107,13 @@ export const AppProvider = ({ children }) => {
 
     // Actualizar el estado de los roles del usuario
     if (roles.includes("egresado")) {
-      setUserLogged(userFound)
+      setUserLogged(userFound);
       setUserRoles(["egresado"]);
-      router.push("/ads")
-    } else if (roles.includes("admin") && roles.includes("lider universitario")) {
+      router.push("/ads");
+    } else if (
+      roles.includes("admin") &&
+      roles.includes("lider universitario")
+    ) {
       setUserRoles(["admin", "lider universitario"]);
     } else if (roles.includes("admin")) {
       setUserRoles(["admin"]);
@@ -97,12 +132,11 @@ export const AppProvider = ({ children }) => {
       );
       setToken(res.token);
       setError("Usuario Autenticado Con Exito");
-      validation(res.userFound)
+      validation(res.userFound);
     } catch (error) {
       setError(error.response.data.message);
     }
   };
-
 
   //*Metodos
 
@@ -113,26 +147,27 @@ export const AppProvider = ({ children }) => {
     let newRoles = [...register.roles];
     if (name === "roles") {
       newRoles = value.split(",").map((role) => role.trim());
-      const invalidRole = newRoles.filter(element => {
+      const invalidRole = newRoles.filter((element) => {
         if (newRoles.length > 1) {
           if (element.includes("egresado")) {
-            return true
+            return true;
           }
         }
         return false;
       });
       if (invalidRole.length > 0) {
-        setError("La combinación de roles es inválida: " + invalidRole.join(", "));
-      }else{
-        setError("Role Valido")
+        setError(
+          "La combinación de roles es inválida: " + invalidRole.join(", ")
+        );
+      } else {
+        setError("Role Valido");
         setRegister({
           ...register,
           [name]: name === "roles" ? newRoles : value,
         });
       }
-    }  
+    }
   };
-  
 
   const handleRegSubmit = (e) => {
     e.preventDefault();
@@ -151,32 +186,64 @@ export const AppProvider = ({ children }) => {
 
   const handleLogSubmit = (e) => {
     e.preventDefault();
-    signIn(login)
+    signIn(login);
   };
   const rutaActual = router.asPath;
   //*Ads View =>User
 
   useEffect(() => {
-    const getAds = async() =>{
-      const {data: res} = await axios.get("https://nodejs-jwt-prueba.vercel.app/api/ads")
-      setGetAds(res)
-    }
-    
+    const getAds = async () => {
+      const { data: res } = await axios.get(
+        "https://nodejs-jwt-prueba.vercel.app/api/ads"
+      );
+      setGetAds(res);
+    };
 
-    (rutaActual == "/profile") ? setContentId("HomeUser") : setContentId("home")
-    getAds() 
-  }, [rutaActual])
-
+    rutaActual == "/profile" ? setContentId("HomeUser") : setContentId("home");
+    getAds();
+  }, [rutaActual]);
 
   //* Peril usuario
 
-  
-  
+  const handleUpdateChange = (e) => {
+    const { name, value } = e.target;
+
+    // Copia actual de userUpt
+    const updatedUserUpt = { ...userUpt };
+
+    // Si el campo que se está actualizando es una experiencia o educación, se obtiene el índice del arreglo a actualizar
+    const idx = name.indexOf("[");
+    if (idx > -1) {
+      const fieldName = name.slice(0, idx);
+      const arrIdx = parseInt(name.slice(idx + 1, name.length - 1));
+      updatedUserUpt[fieldName][arrIdx] = {
+        ...updatedUserUpt[fieldName][arrIdx],
+        [name.slice(name.lastIndexOf("[") + 1, -1)]: value,
+      };
+    } else if (name.startsWith("personalInfo.")) {
+      const personalInfoField = name.replace("personalInfo.", "");
+      updatedUserUpt.personalInfo = {
+        ...updatedUserUpt.personalInfo,
+        [personalInfoField]: value,
+      };
+    } else {
+      // Si no es una experiencia o educación, se actualiza el campo normalmente
+      updatedUserUpt[name] = value;
+    }
+
+    // Si el campo que se está actualizando pertenece a personalInfo, se actualiza el campo correspondiente
+
+    // Se actualiza el estado con la copia actualizada de userUpt
+    setUserUpt(updatedUserUpt);
+  };
+
+  const handleUptSubmit = () => {
+    console.log(userUpt);
+  };
 
   return (
     <appContext.Provider
       value={{
-
         router,
 
         //? Registro
@@ -195,6 +262,10 @@ export const AppProvider = ({ children }) => {
         contentId,
         handleNav,
         handleContent,
+
+        //? User Update variables
+        handleUpdateChange,
+        handleUptSubmit,
 
         //? Ads variable
         getAds,
