@@ -220,7 +220,6 @@ export const AppProvider = ({ children }) => {
       setFile(e.target.files[0]);
     }
 
-    // Si el campo que se está actualizando es una experiencia o educación, se obtiene el índice del arreglo a actualizar
     const idx = name.indexOf("[");
     if (idx > -1) {
       const fieldName = name.slice(0, idx);
@@ -236,43 +235,84 @@ export const AppProvider = ({ children }) => {
         [personalInfoField]: value,
       };
     } else {
-      // Si no es una experiencia o educación, se actualiza el campo normalmente
       updatedUserUpt[name] = value;
     }
 
-    // Si el campo que se está actualizando pertenece a personalInfo, se actualiza el campo correspondiente
-
-    // Se actualiza el estado con la copia actualizada de userUpt
-
     data = { ...updatedUserUpt, profileImage: file };
     setUserUpt(data);
-    // formData.append("titulo", data.titulo)
-    // formData.append("descripcion", data.descripcion)
-    // formData.append("carrera_vinculada", data.carrera_vinculada)
-    // formData.append("tipo_anuncio", data.tipo_anuncio)
-    // formData.append("referencia", data.referencia)
-    // formData.append("imagen", data.imagen)
   };
 
   const handleUptSubmit = () => {
-    console.log(userUpt);
-    // for (const key in userUpt) {
-    //   if (key == "experience" || key == "education") {
-    //     userUpt[key].forEach((element) => {
-    //       for (const key in element) {
-    //         console.log(`${key}: ${element[key]}`);
-    //       }
-    //     });
-    //   } else if (key == "personalInfo") {
-    //     for (const item in userUpt[key]) {
-    //       console.log(`${item}: ${userUpt[key][item]}`);
-    //     }
-    //   } else {
-    //     console.log(`${key}: ${userUpt[key]}`);
-    //   }
-    // }
+
+    // Append the user's profile image file, if one has been selected
+    if (file) {
+      formData.append("profileImage", file);
+    }
+
+    // Append all other user information to the form data
+    formData.append("username", userUpt.username);
+    formData.append("email", userUpt.email);
+    formData.append("password", userUpt.password);
+    formData.append("jobTitle", userUpt.jobTitle);
+    formData.append("sector", userUpt.sector);
+    formData.append("country", userUpt.country);
+    formData.append("city", userUpt.city);
+    formData.append("about", userUpt.about);
+
+    // Append the user's experience information to the form data
+    userUpt.experience.forEach((experience, index) => {
+      formData.append(`experience[${index}][title]`, experience.title);
+      formData.append(`experience[${index}][company]`, experience.company);
+      formData.append(
+        `experience[${index}][description]`,
+        experience.description
+      );
+    });
+
+    // Append the user's personal information to the form data
+    formData.append("fullName", userUpt.personalInfo.fullName);
+    formData.append("birthdate", userUpt.personalInfo.birthdate);
+    formData.append("address", userUpt.personalInfo.address);
+    formData.append("phone", userUpt.personalInfo.phone);
+    formData.append("linkedin", userUpt.personalInfo.linkedin);
+    formData.append("website", userUpt.personalInfo.website);
+
+    // Append the user's education information to the form data
+    userUpt.education.forEach((education, index) => {
+      formData.append(
+        `education[${index}][institutionName]`,
+        education.institutionName
+      );
+      formData.append(`education[${index}][degree]`, education.degree);
+      formData.append(
+        `education[${index}][fieldOfStudy]`,
+        education.fieldOfStudy
+      );
+      formData.append(
+        `education[${index}][activitiesAndSocieties]`,
+        education.activitiesAndSocieties
+      );
+    });
+
+    // Submit the form data to the server using an HTTP request
+    // (implementation omitted)
   };
 
+  // for (const key in userUpt) {
+  //   if (key == "experience" || key == "education") {
+  //     userUpt[key].forEach((element) => {
+  //       for (const key in element) {
+  //         console.log(`${key}: ${element[key]}`);
+  //       }
+  //     });
+  //   } else if (key == "personalInfo") {
+  //     for (const item in userUpt[key]) {
+  //       console.log(`${item}: ${userUpt[key][item]}`);
+  //     }
+  //   } else {
+  //     console.log(`${key}: ${userUpt[key]}`);
+  //   }
+  // }
   return (
     <appContext.Provider
       value={{

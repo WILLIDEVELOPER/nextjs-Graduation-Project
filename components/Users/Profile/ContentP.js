@@ -110,13 +110,12 @@ export default function ContentP() {
             </div>
             <div className="flex w-full flex-col gap-[0.3rem]">
               <label
-                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                for="large_size"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Imagen de Perfil
               </label>
               <input
-                class="focus:outline-none block w-full text-lg cursor-pointer bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 "
+                className="focus:outline-none block w-full text-lg cursor-pointer bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 "
                 id="profileImage"
                 name="profileImage"
                 ref={inputFileRef}
