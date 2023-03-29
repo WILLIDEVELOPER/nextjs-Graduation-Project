@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useRouter } from "next/router";
-import { createContext, use } from "react";
+import { createContext, use, useRef } from "react";
 import { useState, useEffect } from "react";
 
 export const appContext = createContext();
@@ -68,6 +68,11 @@ export const AppProvider = ({ children }) => {
       },
     ],
   });
+
+  const inputFileRef = useRef();
+  const [file, setFile] = useState(null);
+  let data = {};
+  let formData = new FormData();
 
   //*Funciones
 
@@ -211,6 +216,10 @@ export const AppProvider = ({ children }) => {
     // Copia actual de userUpt
     const updatedUserUpt = { ...userUpt };
 
+    if (name == "profileImage") {
+      setFile(e.target.files[0]);
+    }
+
     // Si el campo que se está actualizando es una experiencia o educación, se obtiene el índice del arreglo a actualizar
     const idx = name.indexOf("[");
     if (idx > -1) {
@@ -234,11 +243,34 @@ export const AppProvider = ({ children }) => {
     // Si el campo que se está actualizando pertenece a personalInfo, se actualiza el campo correspondiente
 
     // Se actualiza el estado con la copia actualizada de userUpt
-    setUserUpt(updatedUserUpt);
+
+    data = { ...updatedUserUpt, profileImage: file };
+    setUserUpt(data);
+    // formData.append("titulo", data.titulo)
+    // formData.append("descripcion", data.descripcion)
+    // formData.append("carrera_vinculada", data.carrera_vinculada)
+    // formData.append("tipo_anuncio", data.tipo_anuncio)
+    // formData.append("referencia", data.referencia)
+    // formData.append("imagen", data.imagen)
   };
 
   const handleUptSubmit = () => {
     console.log(userUpt);
+    // for (const key in userUpt) {
+    //   if (key == "experience" || key == "education") {
+    //     userUpt[key].forEach((element) => {
+    //       for (const key in element) {
+    //         console.log(`${key}: ${element[key]}`);
+    //       }
+    //     });
+    //   } else if (key == "personalInfo") {
+    //     for (const item in userUpt[key]) {
+    //       console.log(`${item}: ${userUpt[key][item]}`);
+    //     }
+    //   } else {
+    //     console.log(`${key}: ${userUpt[key]}`);
+    //   }
+    // }
   };
 
   return (
@@ -266,6 +298,8 @@ export const AppProvider = ({ children }) => {
         //? User Update variables
         handleUpdateChange,
         handleUptSubmit,
+        inputFileRef,
+        setFile,
 
         //? Ads variable
         getAds,

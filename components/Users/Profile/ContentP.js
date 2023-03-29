@@ -2,8 +2,13 @@ import { appContext } from "@/Context/AppContext";
 import React, { useContext } from "react";
 
 export default function ContentP() {
-  let { contentId, handleUpdateChange, handleUptSubmit } =
-    useContext(appContext);
+  let {
+    contentId,
+    handleUpdateChange,
+    handleUptSubmit,
+    inputFileRef,
+    setFile,
+  } = useContext(appContext);
   const style = {
     width: "calc(100vw - 13rem)",
   };
@@ -47,18 +52,17 @@ export default function ContentP() {
                   className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
                   placeholder="**********"
                 />
-                
               </div>
               <div className="flex w-full flex-col gap-[0.3rem]">
-                  <label>Puesto de Trabajo</label>
-                  <input
-                    type="text"
-                    name="jobTitle"
-                    onChange={handleUpdateChange}
-                    className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
-                    placeholder="Programador"
-                  />
-                </div>
+                <label>Puesto de Trabajo</label>
+                <input
+                  type="text"
+                  name="jobTitle"
+                  onChange={handleUpdateChange}
+                  className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
+                  placeholder="Programador"
+                />
+              </div>
             </div>
             <div className="flex w-full gap-[1rem] justify-around ">
               <div className="flex w-full flex-col gap-[0.3rem]">
@@ -103,6 +107,22 @@ export default function ContentP() {
                   placeholder="Descripcion breve del trabajo"
                 />
               </div>
+            </div>
+            <div className="flex w-full flex-col gap-[0.3rem]">
+              <label
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                for="large_size"
+              >
+                Imagen de Perfil
+              </label>
+              <input
+                class="focus:outline-none block w-full text-lg cursor-pointer bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 "
+                id="profileImage"
+                name="profileImage"
+                ref={inputFileRef}
+                onChange={handleUpdateChange}
+                type="file"
+              />
             </div>
           </div>
           <div className=" flex flex-col gap-[1.5rem]">
