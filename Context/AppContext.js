@@ -107,6 +107,13 @@ export const AppProvider = ({ children }) => {
 
   //? Funciones para el signIn
 
+  useEffect(() => {
+    const storedData = localStorage.getItem("usuario");
+    if (storedData) {
+      setUserLogged(JSON.parse(storedData));
+    }
+  }, []);
+
   const validation = (userFound) => {
     const roles = userFound.roles.map((role) => role.name);
 
@@ -129,6 +136,10 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    localStorage.setItem('usuario', JSON.stringify(userLogged));
+  }, [userLogged]);
+
   const signIn = async (datos) => {
     try {
       const { data: res } = await axios.post(
@@ -142,6 +153,8 @@ export const AppProvider = ({ children }) => {
       setError(error.response.data.message);
     }
   };
+
+
 
   //*Metodos
 
@@ -243,7 +256,6 @@ export const AppProvider = ({ children }) => {
   };
 
   const handleUptSubmit = () => {
-
     // Append the user's profile image file, if one has been selected
     if (file) {
       formData.append("profileImage", file);
@@ -293,6 +305,29 @@ export const AppProvider = ({ children }) => {
         education.activitiesAndSocieties
       );
     });
+
+
+    console.log(userUpt);
+
+    
+    const updateUser = async() =>{
+      try {
+        const { data: res } = await axios.patch(
+          `https://nodejs-jwt-prueba.vercel.app/api/users/${userLogged._id}`,
+          formData,
+          {
+            headers: {
+              "x-access-token": token
+            }
+          }
+        );
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    
+    updateUser()
 
     // Submit the form data to the server using an HTTP request
     // (implementation omitted)
