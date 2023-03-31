@@ -109,8 +109,10 @@ export const AppProvider = ({ children }) => {
 
   useEffect(() => {
     const storedData = localStorage.getItem("usuario");
-    if (storedData) {
+    const tokenData = localStorage.getItem("token");
+    if (storedData && tokenData) {
       setUserLogged(JSON.parse(storedData));
+      setToken(tokenData);
     }
   }, []);
 
@@ -137,7 +139,8 @@ export const AppProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    localStorage.setItem('usuario', JSON.stringify(userLogged));
+    localStorage.setItem("usuario", JSON.stringify(userLogged));
+    localStorage.setItem("token", token);
   }, [userLogged]);
 
   const signIn = async (datos) => {
@@ -153,8 +156,6 @@ export const AppProvider = ({ children }) => {
       setError(error.response.data.message);
     }
   };
-
-
 
   //*Metodos
 
@@ -256,60 +257,36 @@ export const AppProvider = ({ children }) => {
   };
 
   const handleUptSubmit = () => {
-    // Append the user's profile image file, if one has been selected
     if (file) {
       formData.append("profileImage", file);
     }
 
-    // Append all other user information to the form data
-    formData.append("username", userUpt.username);
-    formData.append("email", userUpt.email);
-    formData.append("password", userUpt.password);
-    formData.append("jobTitle", userUpt.jobTitle);
-    formData.append("sector", userUpt.sector);
-    formData.append("country", userUpt.country);
-    formData.append("city", userUpt.city);
-    formData.append("about", userUpt.about);
+    for (const key in userUpt) {
+      if (
+        userUpt[key] != "" &&
+        key != "experience" &&
+        key != "education" &&
+        key != "personalInfo"
+      ) {
+        formData.append(key, userUpt[key]);
+      } else if (key == "experience" || key == "education") {
+        const objeto = userUpt[key][0]
+        for (const item in objeto) {
+          if (objeto[item] != "") {
+            formData.append(key, JSON.stringify(userUpt[key][0]));
+          }
+        }
+      } else if (key == "personalInfo") {
+        const objetoDos = userUpt[key]
+        for (const el in objetoDos) {
+          if (objetoDos[el] != "") {
+            formData.append(key, JSON.stringify(userUpt[key]));
+          }
+        }
+        
+      }
+    }
 
-    // Append the user's experience information to the form data
-    userUpt.experience.forEach((experience, index) => {
-      formData.append(`experience[${index}][title]`, experience.title);
-      formData.append(`experience[${index}][company]`, experience.company);
-      formData.append(
-        `experience[${index}][description]`,
-        experience.description
-      );
-    });
-
-    // Append the user's personal information to the form data
-    formData.append("fullName", userUpt.personalInfo.fullName);
-    formData.append("birthdate", userUpt.personalInfo.birthdate);
-    formData.append("address", userUpt.personalInfo.address);
-    formData.append("phone", userUpt.personalInfo.phone);
-    formData.append("linkedin", userUpt.personalInfo.linkedin);
-    formData.append("website", userUpt.personalInfo.website);
-
-    // Append the user's education information to the form data
-    userUpt.education.forEach((education, index) => {
-      formData.append(
-        `education[${index}][institutionName]`,
-        education.institutionName
-      );
-      formData.append(`education[${index}][degree]`, education.degree);
-      formData.append(
-        `education[${index}][fieldOfStudy]`,
-        education.fieldOfStudy
-      );
-      formData.append(
-        `education[${index}][activitiesAndSocieties]`,
-        education.activitiesAndSocieties
-      );
-    });
-
-
-    console.log(userUpt);
-
-    
     const updateUser = async() =>{
       try {
         const { data: res } = await axios.patch(
@@ -317,7 +294,8 @@ export const AppProvider = ({ children }) => {
           formData,
           {
             headers: {
-              "x-access-token": token
+              "x-access-token": token,
+              "Content-Type": "multipart/form-data"
             }
           }
         );
@@ -326,28 +304,10 @@ export const AppProvider = ({ children }) => {
         console.log(error);
       }
     }
-    
-    updateUser()
 
-    // Submit the form data to the server using an HTTP request
-    // (implementation omitted)
+    updateUser()
   };
 
-  // for (const key in userUpt) {
-  //   if (key == "experience" || key == "education") {
-  //     userUpt[key].forEach((element) => {
-  //       for (const key in element) {
-  //         console.log(`${key}: ${element[key]}`);
-  //       }
-  //     });
-  //   } else if (key == "personalInfo") {
-  //     for (const item in userUpt[key]) {
-  //       console.log(`${item}: ${userUpt[key][item]}`);
-  //     }
-  //   } else {
-  //     console.log(`${key}: ${userUpt[key]}`);
-  //   }
-  // }
   return (
     <appContext.Provider
       value={{
