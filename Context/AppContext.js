@@ -283,7 +283,6 @@ export const AppProvider = ({ children }) => {
             formData.append(key, JSON.stringify(userUpt[key]));
           }
         }
-        
       }
     }
 
