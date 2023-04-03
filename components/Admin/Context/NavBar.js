@@ -1,15 +1,11 @@
-import { appContext } from "@/Context/AppContext";
-import React, { useContext } from "react";
 
-export default function NavBarP() {
-  const { handleNav, router } = useContext(appContext);
+
+export default function NavBar() {
   return (
     <div className="p-[2rem] flex flex-col font-bold text-xl  justify-between gap-[2rem] text-center text-white bg-[#161520] w-[13rem]  h-screen">
       <div>
         <div className="py-[3rem] cursor-pointer">
           <li
-            id="HomeUser"
-            onClick={handleNav}
             className="list-none hover:bg-slate-400 py-[0.5rem] rounded-xl px-[0.5rem]"
           >
             Home
@@ -17,8 +13,6 @@ export default function NavBarP() {
         </div>
         <div className="py-[3rem] cursor-pointer">
           <li
-            id="ExpUser"
-            onClick={handleNav}
             className="list-none hover:bg-slate-400 py-[0.5rem] rounded-xl px-[0.5rem]"
           >
             Experiencia
@@ -26,8 +20,6 @@ export default function NavBarP() {
         </div>
         <div className="py-[3rem] cursor-pointer">
           <li
-            id="EduUser"
-            onClick={handleNav}
             className="list-none hover:bg-slate-400 py-[0.5rem] rounded-xl"
           >
             Educacion
@@ -35,8 +27,6 @@ export default function NavBarP() {
         </div>
         <div className="py-[3rem] cursor-pointer">
           <li
-            id="Personal"
-            onClick={handleNav}
             className="list-none hover:bg-slate-400 py-[0.5rem] rounded-xl"
           >
             Personal
