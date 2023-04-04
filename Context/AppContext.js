@@ -219,6 +219,7 @@ export const AppProvider = ({ children }) => {
     };
 
     rutaActual == "/profile" ? setContentId("HomeUser") : setContentId("home");
+    rutaActual == "/adminView" ? setContentId("HomeAdmin") : setContentId("home")
     getAds();
   }, [rutaActual]);
 
