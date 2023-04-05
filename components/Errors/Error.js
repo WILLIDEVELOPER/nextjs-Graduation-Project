@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router'
 import React from 'react'
-export default function ErrorAd() {   
+
+export default function Error() {   
   const router = useRouter()
   return (
     <div className='flex flex-col text-center text-white font-bold'>

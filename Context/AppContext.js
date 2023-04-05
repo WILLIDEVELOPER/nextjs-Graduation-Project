@@ -12,7 +12,7 @@ export const AppProvider = ({ children }) => {
   const router = useRouter();
 
   //Todo: variables para manejo del contenido que me mostrara el navbar
-  const [contentId, setContentId] = useState("home");
+  const [contentId, setContentId] = useState("home" || "HomeUser");
   let getId = "";
 
   //Todo: variables para el signUp
@@ -31,9 +31,11 @@ export const AppProvider = ({ children }) => {
   const [token, setToken] = useState("");
   const [userRoles, setUserRoles] = useState([]);
   const [userLogged, setUserLogged] = useState({});
+  const [adminLogged, setAdminLogged] = useState({});
 
   //Todo: variables para rol usuario
   const [getAds, setGetAds] = useState([]);
+  const [getUsers, setGetUsers] = useState([]);
   const [userUpt, setUserUpt] = useState({
     username: "",
     email: "",
@@ -68,13 +70,32 @@ export const AppProvider = ({ children }) => {
       },
     ],
   });
-
+  let rutaActual = router.asPath;
   const inputFileRef = useRef();
   const [file, setFile] = useState(null);
   let data = {};
   let formData = new FormData();
 
   //*Funciones
+
+  useEffect(() => {
+    localStorage.setItem("usuario", JSON.stringify(userLogged));
+    localStorage.setItem("admin", JSON.stringify(adminLogged));
+    localStorage.setItem("token", token);
+
+    const userData = localStorage.getItem("usuario");
+    const tokenData = localStorage.getItem("token");
+    const adminData = localStorage.getItem("admin");
+    if (userData && tokenData) {
+      setUserLogged(JSON.parse(userData));
+      setToken(tokenData);
+    }
+
+    if (adminData && tokenData) {
+      setAdminLogged(JSON.parse(adminData));
+      setToken(tokenData);
+    }
+  }, []);
 
   //? Content del home
   const handleNav = (e) => {
@@ -107,15 +128,6 @@ export const AppProvider = ({ children }) => {
 
   //? Funciones para el signIn
 
-  useEffect(() => {
-    const storedData = localStorage.getItem("usuario");
-    const tokenData = localStorage.getItem("token");
-    if (storedData && tokenData) {
-      setUserLogged(JSON.parse(storedData));
-      setToken(tokenData);
-    }
-  }, []);
-
   const validation = (userFound) => {
     const roles = userFound.roles.map((role) => role.name);
 
@@ -128,20 +140,23 @@ export const AppProvider = ({ children }) => {
       roles.includes("admin") &&
       roles.includes("lider universitario")
     ) {
+      setAdminLogged(userFound);
       setUserRoles(["admin", "lider universitario"]);
+      router.push("/adminView");
     } else if (roles.includes("admin")) {
+      setAdminLogged(userFound);
+      router.push("/adminView");
       setUserRoles(["admin"]);
     } else if (roles.includes("lider universitario")) {
+      setAdminLogged(userFound);
+      router.push("/adminView");
       setUserRoles(["lider universitario"]);
     } else {
       setUserRoles([]);
     }
   };
 
-  useEffect(() => {
-    localStorage.setItem("usuario", JSON.stringify(userLogged));
-    localStorage.setItem("token", token);
-  }, [userLogged]);
+  
 
   const signIn = async (datos) => {
     try {
@@ -207,10 +222,26 @@ export const AppProvider = ({ children }) => {
     e.preventDefault();
     signIn(login);
   };
-  const rutaActual = router.asPath;
+
+
+  //get users 
+  const getAllUsers = async () => {
+    const { data: res } = await axios.get(
+      "https://nodejs-jwt-prueba.vercel.app/api/users",
+      {
+        headers: {
+          "x-access-token": token,
+        },
+      }
+    );
+    setGetUsers(res);
+    console.log(res);
+  };
+
   //*Ads View =>User
 
   useEffect(() => {
+    rutaActual = router.asPath;
     const getAds = async () => {
       const { data: res } = await axios.get(
         "https://nodejs-jwt-prueba.vercel.app/api/ads"
@@ -220,6 +251,10 @@ export const AppProvider = ({ children }) => {
 
     rutaActual == "/profile" ? setContentId("HomeUser") : setContentId("home");
     rutaActual == "/adminView" ? setContentId("HomeAdmin") : setContentId("home")
+
+    if (rutaActual == "/adminView") {
+      getAllUsers()
+    }
     getAds();
   }, [rutaActual]);
 
@@ -271,14 +306,14 @@ export const AppProvider = ({ children }) => {
       ) {
         formData.append(key, userUpt[key]);
       } else if (key == "experience" || key == "education") {
-        const objeto = userUpt[key][0]
+        const objeto = userUpt[key][0];
         for (const item in objeto) {
           if (objeto[item] != "") {
             formData.append(key, JSON.stringify(userUpt[key][0]));
           }
         }
       } else if (key == "personalInfo") {
-        const objetoDos = userUpt[key]
+        const objetoDos = userUpt[key];
         for (const el in objetoDos) {
           if (objetoDos[el] != "") {
             formData.append(key, JSON.stringify(userUpt[key]));
@@ -287,7 +322,7 @@ export const AppProvider = ({ children }) => {
       }
     }
 
-    const updateUser = async() =>{
+    const updateUser = async () => {
       try {
         const { data: res } = await axios.patch(
           `https://nodejs-jwt-prueba.vercel.app/api/users/${userLogged._id}`,
@@ -295,17 +330,31 @@ export const AppProvider = ({ children }) => {
           {
             headers: {
               "x-access-token": token,
-              "Content-Type": "multipart/form-data"
-            }
+              "Content-Type": "multipart/form-data",
+            },
           }
         );
         console.log(res);
       } catch (error) {
         console.log(error);
       }
-    }
+    };
 
-    updateUser()
+    updateUser();
+  };
+
+  // cerrado de sesion
+
+  const logOut = () => {
+    if (rutaActual == "/adminView") {
+      localStorage.removeItem("admin");
+      localStorage.removeItem("token");
+      router.push("/");
+    } else {
+      localStorage.removeItem("usuario");
+      localStorage.removeItem("token");
+      router.push("/");
+    }
   };
 
   return (
@@ -338,6 +387,10 @@ export const AppProvider = ({ children }) => {
 
         //? Ads variable
         getAds,
+        getUsers,
+
+        //logOut
+        logOut,
       }}
     >
       {children}

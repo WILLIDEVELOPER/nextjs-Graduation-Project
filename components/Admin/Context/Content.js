@@ -51,23 +51,7 @@ export default function Content() {
                         href="#"
                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       >
-                        Reward
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Promote
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Activate account
+                        Ver usuario
                       </a>
                     </li>
                   </ul>
@@ -76,7 +60,7 @@ export default function Content() {
                       href="#"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                     >
-                      Delete User
+                      Eliminar Usuario
                     </a>
                   </div>
                 </div>
@@ -422,23 +406,7 @@ export default function Content() {
                         href="#"
                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       >
-                        Reward
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Promote
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        href="#"
-                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Activate account
+                        Ver Anuncio
                       </a>
                     </li>
                   </ul>
@@ -447,7 +415,7 @@ export default function Content() {
                       href="#"
                       class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                     >
-                      Delete User
+                      Eliminar Anuncio
                     </a>
                   </div>
                 </div>
