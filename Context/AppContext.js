@@ -156,8 +156,6 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  
-
   const signIn = async (datos) => {
     try {
       const { data: res } = await axios.post(
@@ -223,8 +221,7 @@ export const AppProvider = ({ children }) => {
     signIn(login);
   };
 
-
-  //get users 
+  //get users
   const getAllUsers = async () => {
     const { data: res } = await axios.get(
       "https://nodejs-jwt-prueba.vercel.app/api/users",
@@ -235,7 +232,6 @@ export const AppProvider = ({ children }) => {
       }
     );
     setGetUsers(res);
-    console.log(res);
   };
 
   //*Ads View =>User
@@ -250,13 +246,15 @@ export const AppProvider = ({ children }) => {
     };
 
     rutaActual == "/profile" ? setContentId("HomeUser") : setContentId("home");
-    rutaActual == "/adminView" ? setContentId("HomeAdmin") : setContentId("home")
+    rutaActual == "/adminView"
+      ? setContentId("HomeAdmin")
+      : setContentId("home");
 
     if (rutaActual == "/adminView") {
-      getAllUsers()
+      getAllUsers();
     }
     getAds();
-  }, [rutaActual]);
+  }, [rutaActual, getUsers]);
 
   //* Peril usuario
 
@@ -343,6 +341,22 @@ export const AppProvider = ({ children }) => {
     updateUser();
   };
 
+  const deleteUser = async (id) => {
+    try {
+      const { data: res } = await axios.delete(
+        `https://nodejs-jwt-prueba.vercel.app/api/users/${id}`,
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // cerrado de sesion
 
   const logOut = () => {
@@ -391,6 +405,9 @@ export const AppProvider = ({ children }) => {
 
         //logOut
         logOut,
+
+        //user
+        deleteUser,
       }}
     >
       {children}
