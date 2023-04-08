@@ -79,23 +79,27 @@ export const AppProvider = ({ children }) => {
   //*Funciones
 
   useEffect(() => {
-    localStorage.setItem("usuario", JSON.stringify(userLogged));
-    localStorage.setItem("admin", JSON.stringify(adminLogged));
-    localStorage.setItem("token", token);
+    rutaActual = router.asPath;
 
-    const userData = localStorage.getItem("usuario");
-    const tokenData = localStorage.getItem("token");
-    const adminData = localStorage.getItem("admin");
-    if (userData && tokenData) {
-      setUserLogged(JSON.parse(userData));
-      setToken(tokenData);
+    rutaActual == "/profile" ? setContentId("HomeUser") : setContentId("home");
+    rutaActual == "/adminView"
+      ? setContentId("HomeAdmin")
+      : setContentId("home");
+
+    const getAds = async () => {
+      const { data: res } = await axios.get(
+        "https://nodejs-jwt-prueba.vercel.app/api/ads"
+      );
+      setGetAds(res);
+    };
+
+    
+    if (rutaActual == "/adminView" && token != "") {
+      getAllUsers();
     }
 
-    if (adminData && tokenData) {
-      setAdminLogged(JSON.parse(adminData));
-      setToken(tokenData);
-    }
-  }, []);
+    getAds();
+  }, [rutaActual]);
 
   //? Content del home
   const handleNav = (e) => {
@@ -234,27 +238,6 @@ export const AppProvider = ({ children }) => {
     setGetUsers(res);
   };
 
-  //*Ads View =>User
-
-  useEffect(() => {
-    rutaActual = router.asPath;
-    const getAds = async () => {
-      const { data: res } = await axios.get(
-        "https://nodejs-jwt-prueba.vercel.app/api/ads"
-      );
-      setGetAds(res);
-    };
-
-    rutaActual == "/profile" ? setContentId("HomeUser") : setContentId("home");
-    rutaActual == "/adminView"
-      ? setContentId("HomeAdmin")
-      : setContentId("home");
-
-    if (rutaActual == "/adminView") {
-      getAllUsers();
-    }
-    getAds();
-  }, [rutaActual, getUsers]);
 
   //* Peril usuario
 
@@ -360,20 +343,40 @@ export const AppProvider = ({ children }) => {
   // cerrado de sesion
 
   const logOut = () => {
-    if (rutaActual == "/adminView") {
-      localStorage.removeItem("admin");
-      localStorage.removeItem("token");
-      router.push("/");
-    } else {
-      localStorage.removeItem("usuario");
-      localStorage.removeItem("token");
-      router.push("/");
+    localStorage.removeItem("admin")
+    localStorage.removeItem("usuario")
+    localStorage.removeItem("token")
+    router.push("/")
+  };
+
+  const searcUser = (e) => {
+    if (e.keyCode == 13) {
+      let userFound = [];
+      const usuario = getUsers.find((user) => {
+        if (user.username.includes(e.target.value)) {
+          return user;
+        }
+      });
+
+      userFound.push(usuario);
+
+      setGetUsers(userFound);
+
+      if (e.target.value == "") {
+        getAllUsers();
+      }
     }
   };
 
   return (
     <appContext.Provider
       value={{
+        //variables
+        adminLogged,
+        setAdminLogged,
+        setUserLogged,
+        setToken,
+        token,
         router,
 
         //? Registro
@@ -402,6 +405,7 @@ export const AppProvider = ({ children }) => {
         //? Ads variable
         getAds,
         getUsers,
+        searcUser,
 
         //logOut
         logOut,

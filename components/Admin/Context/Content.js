@@ -2,12 +2,26 @@ import { appContext } from "@/Context/AppContext";
 import React, { useContext, useState } from "react";
 
 export default function Content() {
-  const { contentId, getUsers, deleteUser } = useContext(appContext);
-  const [showModal, setShowModal] = useState(false);
+  const { contentId, getUsers, getAds, deleteUser, searcUser } =
+    useContext(appContext);
   const [showEditUser, setShowEditUser] = useState(false);
+  const [getUser, setGetUser] = useState([]);
+  const [getAd, setGetAd] = useState([]);
+
+  const [createAd, setCreateAd] = useState(false);
   const style = {
     width: "calc(100vw - 12rem)",
   };
+
+  function isValidJson(jsonString) {
+    try {
+      JSON.parse(jsonString).url;
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   if (contentId == "HomeAdmin") {
     return (
       <div
@@ -34,7 +48,7 @@ export default function Content() {
               </div>
               <input
                 type="text"
-                id="table-search-users"
+                onKeyDown={searcUser}
                 class="block p-2 pl-10 text-sm placeholder:text-white    text-white font-bold border outline-none border-gray-300 rounded-lg w-80 bg-[#8F43EE]"
                 placeholder="Search for users"
               />
@@ -67,7 +81,9 @@ export default function Content() {
                     <img
                       class="w-10 h-10 rounded-full"
                       src={
-                        user.profileImage && JSON.parse(user.profileImage).url
+                        isValidJson(user.profileImage)
+                          ? JSON.parse(user.profileImage)?.url
+                          : "https://i.imgur.com/gxw3HHE.png"
                       }
                       alt="Jese image"
                     />
@@ -88,6 +104,10 @@ export default function Content() {
                     <a
                       type="button"
                       onClick={() => {
+                        const usuario = getUsers.find(
+                          (item) => item._id == user._id
+                        );
+                        setGetUser(usuario);
                         setShowEditUser(!showEditUser);
                       }}
                       class="font-medium cursor-pointer py-[0.3rem] px-[0.6rem]  bg-blue-500 text-white rounded-md  hover:underline"
@@ -135,35 +155,39 @@ export default function Content() {
                             </button>
                           </div>
                           {/* <!-- Modal body --> */}
-                          <div class="p-6  flex gap-[0.5rem]">
-                            <img className="w-[45%] h-full"
+                          <div class="p-6   flex gap-[0.5rem]">
+                            <img
+                              class="w-[40%] rounded-full"
                               src={
-                                user.profileImage &&
-                                JSON.parse(user.profileImage).url
+                                isValidJson(getUser.profileImage)
+                                  ? JSON.parse(getUser.profileImage)?.url
+                                  : "https://i.imgur.com/gxw3HHE.png"
                               }
+                              alt="Jese image"
                             />
                             <div className="h-full capitalize flex flex-col gap-[0.3rem]">
                               <h1 className="text-white uppercase font-bold text-xl">
-                                {user.username}
+                                {getUser.username}
                               </h1>
-                              <p>{user.email}</p>
-                              <p>{user.about}</p>
-                              <p>{user.country}</p>
-                              <p>{user.jobTitle}</p>
-                              <p>{user.sector}</p>
-                              <p>{user.city}</p>
+                              <p>{getUser.email}</p>
+                              <p>{getUser.about}</p>
+                              <p>{getUser.country}</p>
+                              <p>{getUser.jobTitle}</p>
+                              <p>{getUser.sector}</p>
+                              <p>{getUser.city}</p>
                             </div>
                           </div>
                           {/* <!-- Modal footer --> */}
-                          <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                          <div class="flex justify-center items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                             <button
                               type="submit"
                               onClick={() => {
+                                deleteUser(getUser._id);
                                 setShowEditUser(!showEditUser);
                               }}
-                              class="text-white bg-blue-500 hover:bg-blue-800    font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                              class="text-white bg-red-500 capitalize  hover:bg-red-800    font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                             >
-                              Save all
+                              Eliminar
                             </button>
                           </div>
                         </form>
@@ -185,57 +209,7 @@ export default function Content() {
         className="p-[2rem] flex flex-col gap-[2rem] justify-center items-center text-white font-bold text-[16px]"
       >
         <div class="w-full h-full relative overflow-x-auto  ">
-          <div class="flex items-center justify-between py-4 bg-transparent">
-            <div>
-              <button
-                onClick={() => {
-                  setShowModal(!showModal);
-                }}
-                class="inline-flex items-center font-bold  border border-gray-300 focus:outline-none hover:bg-[#7c20ec]  rounded-lg text-sm px-3 py-1.5 bg-[#8F43EE]    "
-                type="button"
-              >
-                <span class="sr-only">Action button</span>
-                Actions
-                <svg
-                  class="w-3 h-3 ml-2"
-                  aria-hidden="true"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 9l-7 7-7-7"
-                  ></path>
-                </svg>
-              </button>
-              {/* <!-- Dropdown menu --> */}
-              {showModal && (
-                <div class="z-10 absolute bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                  <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
-                    <li>
-                      <a
-                        href="#"
-                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                      >
-                        Ver Anuncio
-                      </a>
-                    </li>
-                  </ul>
-                  <div class="py-1">
-                    <a
-                      href="#"
-                      class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                    >
-                      Eliminar Anuncio
-                    </a>
-                  </div>
-                </div>
-              )}
-            </div>
+          <div class="flex items-center justify-end py-4 bg-transparent">
             <div class="relative">
               <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <svg
@@ -254,117 +228,183 @@ export default function Content() {
               </div>
               <input
                 type="text"
-                id="table-search-users"
+                onKeyDown={searcUser}
                 class="block p-2 pl-10 text-sm placeholder:text-white    text-white font-bold border outline-none border-gray-300 rounded-lg w-80 bg-[#8F43EE]"
-                placeholder="Search for ads"
+                placeholder="Search for users"
               />
             </div>
           </div>
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-white font-bold uppercase bg-[#8F43EE] ">
               <tr>
-                <th scope="col" class="p-4">
-                  <div class="flex items-center">
-                    <input
-                      id="checkbox-all-search"
-                      type="checkbox"
-                      class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                    <label for="checkbox-all-search" class="sr-only">
-                      checkbox
-                    </label>
-                  </div>
+                <th scope="col" class="px-6 py-3 text-center">
+                  Titulo
                 </th>
-                <th scope="col" class="px-6 py-3">
-                  Name
+                <th scope="col" class="px-6 py-3 ">
+                  Descripcion
                 </th>
-                <th scope="col" class="px-6 py-3">
-                  Position
+                <th scope="col" class="px-6 py-3 ">
+                  Estado
                 </th>
-                <th scope="col" class="px-6 py-3">
-                  Status
-                </th>
-                <th scope="col" class="px-6 py-3">
-                  Action
+                <th scope="col" class="px-6 py-3 ">
+                  Acciones
                 </th>
               </tr>
             </thead>
             <tbody className="bg-[#161520]">
-              <tr class=" hover:bg-[#2c2b38]">
-                <td class="w-4 p-4">
-                  <div class="flex items-center">
-                    <input
-                      id="checkbox-table-search-1"
-                      type="checkbox"
-                      class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                    />
-                  </div>
-                </td>
-                <th
-                  scope="row"
-                  class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
-                >
-                  <img
-                    class="w-10 h-10 rounded-full"
-                    src="/docs/images/people/profile-picture-1.jpg"
-                    alt="Jese image"
-                  />
-                  <div class="pl-3">
-                    <div class="text-base font-semibold">Neil Sims</div>
-                    <div class="font-normal text-gray-500">
-                      neil.sims@flowbite.com
-                    </div>
-                  </div>
-                </th>
-                <td class="px-6 py-4 text-white">React Developer</td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center text-white">
-                    <div class="h-2.5 w-2.5 rounded-full bg-green-500 mr-2"></div>{" "}
-                    Online
-                  </div>
-                </td>
-                <td class="px-6 py-4">
-                  {/* <!-- Modal toggle --> */}
-                  <a
-                    href="#"
-                    type="button"
-                    onClick={() => {
-                      setShowEditUser(!showEditUser);
-                    }}
-                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline"
+              {getAds.map((ad) => (
+                <tr key={ad._id} class=" hover:bg-[#2c2b38]">
+                  <th
+                    scope="row"
+                    class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    Edit ad
-                  </a>
-                </td>
-              </tr>
+                    <img
+                      class="w-10 h-10 rounded-full"
+                      src={
+                        isValidJson(ad.image)
+                          ? JSON.parse(ad.image)?.url
+                          : "https://i.imgur.com/gxw3HHE.png"
+                      }
+                      alt="Jese image"
+                    />
+
+                    <div class="pl-3">
+                      <div class="text-base font-semibold">{ad.titulo}</div>
+                      <div class="font-normal text-gray-500">{ad.tipo}</div>
+                    </div>
+                  </th>
+                  <td class="px-6 py-4 text-white">{ad.descripcion}</td>
+                  <td class="px-6 py-4">
+                    <div class="flex capitalize items-center text-white">
+                      <div class="h-2.5 w-2.5  rounded-full bg-green-500 mr-2"></div>
+                      {ad.set}
+                    </div>
+                  </td>
+                  <td class=" flex  gap-[0.7rem] px-6 py-4">
+                    <a
+                      type="button"
+                      onClick={() => {
+                        const anuncio = getAds.find(
+                          (item) => item._id == ad._id
+                        );
+                        setGetAd(anuncio);
+                        setShowEditUser(!showEditUser);
+                      }}
+                      class="font-medium cursor-pointer py-[0.3rem] px-[0.6rem]  bg-blue-500 text-white rounded-md  hover:underline"
+                    >
+                      Ver
+                    </a>
+                    <a
+                      type="button"
+                      // onClick={() => deleteUser(user._id)}
+                      class="font-medium cursor-pointer text-white py-[0.3rem] px-[0.6rem] bg-red-500 rounded-md  hover:underline"
+                    >
+                      Eliminar
+                    </a>
+                  </td>
+                  {showEditUser && (
+                    <div class="fixed  z-50 flex    justify-center  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
+                      <div class="relative  w-full h-full max-w-2xl md:h-auto">
+                        {/* <!-- Modal content --> */}
+                        <form class="relative bg-[#161520] rounded-lg shadow ">
+                          {/* <!-- Modal header --> */}
+                          <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                            <h3 class="text-xl font-bold text-white">
+                              Ver Anuncio
+                            </h3>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setShowEditUser(!showEditUser);
+                              }}
+                              class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                class="w-5 h-5"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                  clip-rule="evenodd"
+                                ></path>
+                              </svg>
+                            </button>
+                          </div>
+                          {/* <!-- Modal body --> */}
+                          <div class="p-6   flex gap-[0.5rem]">
+                            <img
+                              class="w-[40%] rounded-full"
+                              src={
+                                isValidJson(getAd.image)
+                                  ? JSON.parse(getAd.image)?.url
+                                  : "https://i.imgur.com/gxw3HHE.png"
+                              }
+                              alt="Jese image"
+                            />
+                            <div className="h-full capitalize flex flex-col gap-[0.3rem]">
+                              <h1 className="text-white uppercase font-bold text-xl">
+                                {getAd.titulo}
+                              </h1>
+                              <p>{getAd.tipo}</p>
+                              <p>{getAd.descripcion}</p>
+                              <p>{getAd.set}</p>
+                              <p>{getAd.url}</p>
+                            </div>
+                          </div>
+                          {/* <!-- Modal footer --> */}
+                          <div class="flex justify-center items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                            <button
+                              type="submit"
+                              onClick={() => {
+                                deleteUser(getUser._id);
+                                setShowEditUser(!showEditUser);
+                              }}
+                              class="text-white bg-red-500 capitalize  hover:bg-red-800    font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                            >
+                              Eliminar
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  )}
+                </tr>
+              ))}
             </tbody>
           </table>
-          {/* <!-- Edit user modal --> */}
-          {showEditUser && (
-            <div
-              id="editUserModal"
-              tabindex="-1"
-              aria-hidden="true"
-              class="fixed  z-50 flex   justify-center  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full"
-            >
+          <div
+            onClick={() => {
+              setCreateAd(!createAd);
+            }}
+            class="flex cursor-pointer justify-end p-[1rem]"
+          >
+            <div class="w-24 h-24 text-3xl rounded-full flex justify-center items-center bg-blue-500">
+              +
+            </div>
+          </div>
+          {createAd && (
+            <div class="fixed  z-10 flex    justify-center p-10  w-full   md:inset-0 h-[calc(100%-1rem)] ">
               <div class="relative w-full h-full max-w-2xl md:h-auto">
                 {/* <!-- Modal content --> */}
                 <form
                   action="#"
-                  class="relative bg-white rounded-lg shadow dark:bg-gray-700"
+                  class="relative bg-[#161520] rounded-lg shadow "
                 >
                   {/* <!-- Modal header --> */}
                   <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                      Edit user
+                      Crear Usuario
                     </h3>
                     <button
                       type="button"
                       onClick={() => {
-                        setShowEditUser(!showEditUser);
+                        setCreateAd(!createAd);
                       }}
                       class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                      data-modal-hide="editUserModal"
                     >
                       <svg
                         aria-hidden="true"
@@ -384,68 +424,68 @@ export default function Content() {
                   {/* <!-- Modal body --> */}
                   <div class="p-6 space-y-6">
                     <div class="grid grid-cols-6 gap-6">
-                      <div class="col-span-6 sm:col-span-3">
+                      <div class="col-span-6 ">
                         <label
                           for="first-name"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                          First Name
+                          Titulo
                         </label>
                         <input
                           type="text"
                           name="first-name"
                           id="first-name"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="shadow-sm bg-transparent outline-none placeholder:text-white  border border-gray-300  text-sm rounded-lg block w-full p-2.5 "
                           placeholder="Bonnie"
                           required=""
                         />
                       </div>
-                      <div class="col-span-6 sm:col-span-3">
+                      <div class="col-span-6 ">
                         <label
                           for="last-name"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                          Last Name
+                          Descripcion
                         </label>
-                        <input
+                        <textarea
                           type="text"
                           name="last-name"
                           id="last-name"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                          class="shadow-sm bg-transparent outline-none placeholder:text-white  border border-gray-300  text-sm rounded-lg block w-full p-2.5 "
                           placeholder="Green"
                           required=""
                         />
                       </div>
-                      <div class="col-span-6 sm:col-span-3">
+                      <div class="col-span-6 ">
                         <label
                           for="email"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                          Email
+                          Tipo
                         </label>
                         <input
                           type="email"
                           name="email"
                           id="email"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="example@company.com"
+                          class="shadow-sm bg-transparent outline-none placeholder:text-white  border border-gray-300  text-sm rounded-lg block w-full p-2.5 "
+                          placeholder="eventos, noticias, cursos o empleo"
                           required=""
                         />
                       </div>
-                      <div class="col-span-6 sm:col-span-3">
+                      <div class="col-span-6 ">
                         <label
                           for="phone-number"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                          Phone Number
+                          Imagen
                         </label>
                         <input
-                          type="number"
-                          name="phone-number"
-                          id="phone-number"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="e.g. +(12)3456 789"
-                          required=""
+                          className="focus:outline-none block w-full text-lg cursor-pointer bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 "
+                          id="profileImage"
+                          name="profileImage"
+                          // ref={inputFileRef}
+                          // onChange={handleUpdateChange}
+                          type="file"
                         />
                       </div>
                       <div class="col-span-6 sm:col-span-3">
@@ -453,14 +493,14 @@ export default function Content() {
                           for="department"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                          Department
+                          Estado
                         </label>
                         <input
                           type="text"
                           name="department"
                           id="department"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="Development"
+                          class="shadow-sm bg-transparent outline-none placeholder:text-white  border border-gray-300  text-sm rounded-lg block w-full p-2.5 "
+                          placeholder="activo o inactivo"
                           required=""
                         />
                       </div>
@@ -469,61 +509,26 @@ export default function Content() {
                           for="company"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                          Company
+                          Url
                         </label>
                         <input
-                          type="number"
-                          name="company"
-                          id="company"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="123456"
-                          required=""
-                        />
-                      </div>
-                      <div class="col-span-6 sm:col-span-3">
-                        <label
-                          for="current-password"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Current Password
-                        </label>
-                        <input
-                          type="password"
-                          name="current-password"
-                          id="current-password"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="••••••••"
-                          required=""
-                        />
-                      </div>
-                      <div class="col-span-6 sm:col-span-3">
-                        <label
-                          for="new-password"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          New Password
-                        </label>
-                        <input
-                          type="password"
-                          name="new-password"
-                          id="new-password"
-                          class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-600 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                          placeholder="••••••••"
+                          type="text"
+                          name="set"
+                          id="estado"
+                          class="shadow-sm bg-transparent outline-none placeholder:text-white  border border-gray-300  text-sm rounded-lg block w-full p-2.5 "
+                          placeholder="https......"
                           required=""
                         />
                       </div>
                     </div>
                   </div>
                   {/* <!-- Modal footer --> */}
-                  <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                  <div class="flex justify-center items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                     <button
                       type="submit"
-                      onClick={() => {
-                        setShowEditUser(!showEditUser);
-                      }}
-                      class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                      class="text-white text-xl bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                     >
-                      Save all
+                      Añadir
                     </button>
                   </div>
                 </form>
