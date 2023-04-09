@@ -29,6 +29,7 @@ export const AppProvider = ({ children }) => {
     password: "",
   });
   const [token, setToken] = useState("");
+  const [getToken, setGetToken] = useState("")
   const [userRoles, setUserRoles] = useState([]);
   const [userLogged, setUserLogged] = useState({});
   const [adminLogged, setAdminLogged] = useState({});
@@ -36,6 +37,13 @@ export const AppProvider = ({ children }) => {
   //Todo: variables para rol usuario
   const [getAds, setGetAds] = useState([]);
   const [getUsers, setGetUsers] = useState([]);
+  const [ad, setAd] = useState({
+    titulo:"",
+    descripcion:"",
+    tipo: "",
+    set: "",
+    url: ""
+  })
   const [userUpt, setUserUpt] = useState({
     username: "",
     email: "",
@@ -92,11 +100,6 @@ export const AppProvider = ({ children }) => {
       );
       setGetAds(res);
     };
-
-    
-    if (rutaActual == "/adminView" && token != "") {
-      getAllUsers();
-    }
 
     getAds();
   }, [rutaActual]);
@@ -226,17 +229,17 @@ export const AppProvider = ({ children }) => {
   };
 
   //get users
-  const getAllUsers = async () => {
-    const { data: res } = await axios.get(
-      "https://nodejs-jwt-prueba.vercel.app/api/users",
-      {
-        headers: {
-          "x-access-token": token,
-        },
-      }
-    );
-    setGetUsers(res);
-  };
+  // const getAllUsers = async () => {
+  //   const { data: res } = await axios.get(
+  //     "https://nodejs-jwt-prueba.vercel.app/api/users",
+  //     {
+  //       headers: {
+  //         "x-access-token": getToken,
+  //       },
+  //     }
+  //   );
+  //   setGetUsers(res);
+  // };
 
 
   //* Peril usuario
@@ -340,6 +343,22 @@ export const AppProvider = ({ children }) => {
     }
   };
 
+  const deleteAd = async (id) => {
+    try {
+      const { data: res } = await axios.delete(
+        `https://nodejs-jwt-prueba.vercel.app/api/ads/${id}`,
+        {
+          headers: {
+            "x-access-token": token,
+          },
+        }
+      );
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   // cerrado de sesion
 
   const logOut = () => {
@@ -349,23 +368,54 @@ export const AppProvider = ({ children }) => {
     router.push("/")
   };
 
-  const searcUser = (e) => {
-    if (e.keyCode == 13) {
-      let userFound = [];
-      const usuario = getUsers.find((user) => {
-        if (user.username.includes(e.target.value)) {
-          return user;
-        }
-      });
 
-      userFound.push(usuario);
 
-      setGetUsers(userFound);
+  //* Ad update
 
-      if (e.target.value == "") {
-        getAllUsers();
-      }
+  const handleUpdateAdChange = (e) => {
+    const { name, value } = e.target;
+
+    // Copia actual de userUpt
+    const UpdateAd = { ...ad };
+
+    if (name == "image") {
+      setFile(e.target.files[0]);
     }
+
+    UpdateAd[name] = value;
+
+    data = { ...UpdateAd, image: file };
+    setAd(data);
+  };
+
+  const handleUpdateAdSubmit = () => {
+    if (file) {
+      formData.append("image", file);
+    }
+
+    for (const key in ad) {
+      formData.append(key, ad[key]);
+    }
+
+    const UpdateAd = async () => {
+      try {
+        const { data: res } = await axios.patch(
+          `https://nodejs-jwt-prueba.vercel.app/api/users/${userLogged._id}`,
+          formData,
+          {
+            headers: {
+              "x-access-token": token,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        console.log(res);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    UpdateAd();
   };
 
   return (
@@ -405,13 +455,16 @@ export const AppProvider = ({ children }) => {
         //? Ads variable
         getAds,
         getUsers,
-        searcUser,
 
         //logOut
         logOut,
 
         //user
         deleteUser,
+        deleteAd,
+        getToken,
+        setGetToken,
+        setGetUsers
       }}
     >
       {children}

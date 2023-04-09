@@ -1,8 +1,9 @@
 import { appContext } from "@/Context/AppContext";
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Content() {
-  const { contentId, getUsers, getAds, deleteUser, searcUser } =
+  const { contentId, getUsers, getAds, deleteUser, deleteAd } =
     useContext(appContext);
   const [showEditUser, setShowEditUser] = useState(false);
   const [getUser, setGetUser] = useState([]);
@@ -22,38 +23,37 @@ export default function Content() {
     }
   }
 
+  const { setGetUsers  } = useContext(appContext);
+  const getAllUsers = async (tokenData) => {
+    const { data: res } = await axios.get(
+      "https://nodejs-jwt-prueba.vercel.app/api/users",
+      {
+        headers: {
+          "x-access-token": tokenData,
+        },
+      }
+    );
+    setGetUsers(res);
+  };
+
+  const [tokenData, setTokenData] = useState("")
+
+  useEffect(() => {
+    const adminDatos = localStorage.getItem("admin")
+    const tokenDatos = localStorage.getItem("token")
+    
+    setTokenData(tokenDatos)
+
+  }, [])
+
   if (contentId == "HomeAdmin") {
+    getAllUsers(tokenData)
     return (
       <div
         style={style}
         className="p-[2rem] flex flex-col gap-[2rem] justify-center items-center text-white font-bold text-[16px]"
       >
         <div class="w-full h-full relative overflow-x-auto  ">
-          <div class="flex items-center justify-end py-4 bg-transparent">
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg
-                  class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  fill="white"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-              </div>
-              <input
-                type="text"
-                onKeyDown={searcUser}
-                class="block p-2 pl-10 text-sm placeholder:text-white    text-white font-bold border outline-none border-gray-300 rounded-lg w-80 bg-[#8F43EE]"
-                placeholder="Search for users"
-              />
-            </div>
-          </div>
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-white font-bold uppercase bg-[#8F43EE] ">
               <tr>
@@ -209,31 +209,7 @@ export default function Content() {
         className="p-[2rem] flex flex-col gap-[2rem] justify-center items-center text-white font-bold text-[16px]"
       >
         <div class="w-full h-full relative overflow-x-auto  ">
-          <div class="flex items-center justify-end py-4 bg-transparent">
-            <div class="relative">
-              <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <svg
-                  class="w-5 h-5 text-gray-500 dark:text-gray-400"
-                  aria-hidden="true"
-                  fill="white"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-              </div>
-              <input
-                type="text"
-                onKeyDown={searcUser}
-                class="block p-2 pl-10 text-sm placeholder:text-white    text-white font-bold border outline-none border-gray-300 rounded-lg w-80 bg-[#8F43EE]"
-                placeholder="Search for users"
-              />
-            </div>
-          </div>
+         
           <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead class="text-xs text-white font-bold uppercase bg-[#8F43EE] ">
               <tr>
@@ -296,10 +272,17 @@ export default function Content() {
                     </a>
                     <a
                       type="button"
-                      // onClick={() => deleteUser(user._id)}
+                      onClick={() => deleteAd(ad._id)}
                       class="font-medium cursor-pointer text-white py-[0.3rem] px-[0.6rem] bg-red-500 rounded-md  hover:underline"
                     >
                       Eliminar
+                    </a>
+                    <a
+                      type="button"
+                      // onClick={() => deleteUser(user._id)}
+                      class="font-medium cursor-pointer text-white py-[0.3rem] px-[0.6rem] bg-black rounded-md  hover:underline"
+                    >
+                      Actualizar
                     </a>
                   </td>
                   {showEditUser && (
