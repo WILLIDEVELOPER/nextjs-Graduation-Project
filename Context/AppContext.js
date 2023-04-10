@@ -375,7 +375,6 @@ export const AppProvider = ({ children }) => {
   const handleUpdateAdChange = (e) => {
     const { name, value } = e.target;
 
-    // Copia actual de userUpt
     const UpdateAd = { ...ad };
 
     if (name == "image") {
@@ -388,7 +387,8 @@ export const AppProvider = ({ children }) => {
     setAd(data);
   };
 
-  const handleUpdateAdSubmit = () => {
+  const handleUpdateAdSubmit = (e) => {
+    e.preventDefault()
     if (file) {
       formData.append("image", file);
     }
@@ -397,26 +397,40 @@ export const AppProvider = ({ children }) => {
       formData.append(key, ad[key]);
     }
 
-    const UpdateAd = async () => {
-      try {
-        const { data: res } = await axios.patch(
-          `https://nodejs-jwt-prueba.vercel.app/api/users/${userLogged._id}`,
-          formData,
-          {
-            headers: {
-              "x-access-token": token,
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log(res);
-      } catch (error) {
-        console.log(error);
-      }
-    };
+    console.log(ad);
+    // const UpdateAd = async () => {
+    //   try {
+    //     const { data: res } = await axios.patch(
+    //       `https://nodejs-jwt-prueba.vercel.app/api/ads/${adminLogged._id}`,
+    //       formData,
+    //       {
+    //         headers: {
+    //           "x-access-token": token,
+    //           "Content-Type": "multipart/form-data",
+    //         },
+    //       }
+    //     );
+    //     console.log(res);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+    // };
 
-    UpdateAd();
+    // UpdateAd();
   };
+
+  const handleCreateAdSubmit = (e) =>{
+    e.preventDefault()
+    if (file) {
+      formData.append("image", file);
+    }
+
+    for (const key in ad) {
+      formData.append(key, ad[key]);
+    }
+
+    console.log(ad);
+  }
 
   return (
     <appContext.Provider
@@ -464,7 +478,10 @@ export const AppProvider = ({ children }) => {
         deleteAd,
         getToken,
         setGetToken,
-        setGetUsers
+        setGetUsers,
+        handleUpdateAdChange,
+        handleUpdateAdSubmit,
+        handleCreateAdSubmit
       }}
     >
       {children}
