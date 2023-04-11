@@ -29,7 +29,6 @@ export const AppProvider = ({ children }) => {
     password: "",
   });
   const [token, setToken] = useState("");
-  const [getToken, setGetToken] = useState("")
   const [userRoles, setUserRoles] = useState([]);
   const [userLogged, setUserLogged] = useState({});
   const [adminLogged, setAdminLogged] = useState({});
@@ -83,7 +82,7 @@ export const AppProvider = ({ children }) => {
   const [file, setFile] = useState(null);
   let data = {};
   let formData = new FormData();
-
+  const [getToken, setGetToken] = useState("")
   //*Funciones
 
   useEffect(() => {
@@ -100,9 +99,10 @@ export const AppProvider = ({ children }) => {
       );
       setGetAds(res);
     };
-
+    const tokenData = localStorage.getItem("token")
+    setGetToken(tokenData)
     getAds();
-  }, [rutaActual]);
+  }, []);
 
   //? Content del home
   const handleNav = (e) => {
@@ -372,65 +372,140 @@ export const AppProvider = ({ children }) => {
 
   //* Ad update
 
-  const handleUpdateAdChange = (e) => {
+  const createAd = async (formData) => {
+    try {
+      const { data: responseData } = await axios.post(
+        `https://nodejs-jwt-prueba.vercel.app/api/ads`,
+        formData,
+        {
+          headers: {
+            "x-access-token": getToken,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(responseData); // Usa un nombre de variable diferente para la respuesta
+    } catch (error) {
+      console.log(error);
+      // Maneja el error de manera adecuada para tu aplicación
+    }
+  };
+
+  const handleChangeCreateAd = (e) => {
     const { name, value } = e.target;
-
-    const UpdateAd = { ...ad };
-
-    if (name == "image") {
-      setFile(e.target.files[0]);
+  
+    const updatedAd = { ...ad }; // Copia el estado actual ad
+  
+    if (name === "image") {
+      setFile(e.target.files[0]); // Actualiza el estado file con el archivo de imagen
+      updatedAd[name] = e.target.files[0].name; // Actualiza el campo image en el estado ad con el nombre del archivo
+    } else {
+      updatedAd[name] = value; // Actualiza el campo correspondiente en el estado ad con el valor del input
     }
-
-    UpdateAd[name] = value;
-
-    data = { ...UpdateAd, image: file };
-    setAd(data);
+  
+    setAd(updatedAd); // Actualiza el estado ad con los cambios realizados
   };
-
-  const handleUpdateAdSubmit = (e) => {
-    e.preventDefault()
+  
+  
+  const handleSubmitCreateAd = async (e) => {
+    e.preventDefault();
+  
+    const formData = new FormData(); // Crea un nuevo objeto FormData
+  
     if (file) {
-      formData.append("image", file);
+      formData.append("image", file); // Agrega el archivo de imagen al objeto FormData
     }
-
+  
     for (const key in ad) {
-      formData.append(key, ad[key]);
+      if (ad[key] !== undefined) {
+        formData.append(key, ad[key]);
+      }
     }
-
-    console.log(ad);
-    // const UpdateAd = async () => {
-    //   try {
-    //     const { data: res } = await axios.patch(
-    //       `https://nodejs-jwt-prueba.vercel.app/api/ads/${adminLogged._id}`,
-    //       formData,
-    //       {
-    //         headers: {
-    //           "x-access-token": token,
-    //           "Content-Type": "multipart/form-data",
-    //         },
-    //       }
-    //     );
-    //     console.log(res);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-    // };
-
-    // UpdateAd();
+  
+    createAd(formData); // Envía el objeto FormData con la solicitud
   };
+  
+  
 
-  const handleCreateAdSubmit = (e) =>{
-    e.preventDefault()
-    if (file) {
-      formData.append("image", file);
-    }
+  // const handleUpdateAdChange = (e) => {
+  //   const { name, value } = e.target;
 
-    for (const key in ad) {
-      formData.append(key, ad[key]);
-    }
+  //   const UpdateAds = { ...ad };
 
-    console.log(ad);
-  }
+  //   if (name == "image") {
+  //     setFile(e.target.files[0]);
+  //   }
+
+  //   UpdateAds[name] = value;
+
+  //   data = { ...UpdateAds, image: file };
+  //   setAd(data);
+  // };
+
+  // const UpdateAd = async (id) => {
+  //   try {
+  //     const { data: res } = await axios.patch(
+  //       `https://nodejs-jwt-prueba.vercel.app/api/ads/${id}`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           "x-access-token": getToken,
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       }
+  //     );
+  //     console.log(res);
+      
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
+
+  // const handleUpdateAdSubmit = (id) => {
+    
+  //   if (file) {
+  //     formData.append("image", file);
+  //   }
+
+  //   for (const key in ad) {
+  //     if (key != "image") {
+  //       formData.append(key, ad[key]);
+  //     }
+  //   }
+  //   UpdateAd(id);
+  // };
+
+  // const handleCreateAdSubmit = (e) =>{
+  //   e.preventDefault()
+  //   if (file) {
+  //     formData.append("image", file);
+  //   }
+
+  //   for (const key in ad) {
+  //     formData.append(key, ad[key]);
+  //   }
+
+  //   console.log(ad);
+  //   createAd()
+  // }
+
+  // const createAd = async () => {
+  //   try {
+  //     const { data: res } = await axios.post(
+  //       `https://nodejs-jwt-prueba.vercel.app/api/ads`,
+  //       formData,
+  //       {
+  //         headers: {
+  //           "x-access-token": getToken,
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       }
+  //     );
+  //     console.log(res);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   return (
     <appContext.Provider
@@ -476,12 +551,10 @@ export const AppProvider = ({ children }) => {
         //user
         deleteUser,
         deleteAd,
-        getToken,
-        setGetToken,
         setGetUsers,
-        handleUpdateAdChange,
-        handleUpdateAdSubmit,
-        handleCreateAdSubmit
+        handleChangeCreateAd,
+        handleSubmitCreateAd,
+        ad
       }}
     >
       {children}

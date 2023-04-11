@@ -3,8 +3,19 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 
 export default function Content() {
-  const { contentId, getUsers, getAds, deleteUser, deleteAd, handleUpdateAdChange, inputFileRef, handleUpdateAdSubmit, handleCreateAdSubmit } =
-    useContext(appContext);
+  const {
+    contentId,
+    getUsers,
+    getAds,
+    deleteUser,
+    deleteAd,
+    inputFileRef,
+
+    handleChangeCreateAd,
+    handleSubmitCreateAd
+  } = useContext(appContext);
+
+
   const [showEditUser, setShowEditUser] = useState(false);
   const [getUser, setGetUser] = useState([]);
   const [getAd, setGetAd] = useState([]);
@@ -38,17 +49,12 @@ export default function Content() {
     setGetUsers(res);
   };
 
-  const [tokenData, setTokenData] = useState("");
-
   useEffect(() => {
-    const adminDatos = localStorage.getItem("admin");
     const tokenDatos = localStorage.getItem("token");
-
-    setTokenData(tokenDatos);
+    getAllUsers(tokenDatos);
   }, []);
 
   if (contentId == "HomeAdmin") {
-    getAllUsers(tokenData);
     return (
       <div
         style={style}
@@ -278,12 +284,7 @@ export default function Content() {
                       Eliminar
                     </a>
                     <a
-                      type="button"
                       onClick={() => {
-                        const anuncio = getAds.find(
-                          (item) => item._id == ad._id
-                        );
-                        setGetAd(anuncio);
                         setUpdateAd(!updateAd);
                       }}
                       class="font-medium cursor-pointer text-white py-[0.3rem] px-[0.6rem] bg-black rounded-md  hover:underline"
@@ -367,13 +368,16 @@ export default function Content() {
                       <div class="relative w-full h-full max-w-2xl md:h-auto">
                         {/* <!-- Modal content --> */}
                         <form
-                          onSubmit={handleUpdateAdSubmit}
+                          onSubmit={(e) => {
+                            e.preventDefault();
+                            handleUpdateAdSubmit(ad._id);
+                          }}
                           class="relative bg-[#161520] rounded-lg shadow "
                         >
                           {/* <!-- Modal header --> */}
                           <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                             <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                              Actualizar Anuncio
+                              Crear Anuncio
                             </h3>
                             <button
                               type="button"
@@ -412,8 +416,8 @@ export default function Content() {
                                   name="titulo"
                                   onChange={handleUpdateAdChange}
                                   class="shadow-sm bg-transparent outline-none placeholder:text-white  border border-gray-300  text-sm rounded-lg block w-full p-2.5 "
-                                  placeholder="Bonnie"
-                                  required=""
+                                  placeholder="Anuncio egresados"
+                                  required
                                 />
                               </div>
                               <div class="col-span-6 ">
@@ -449,10 +453,7 @@ export default function Content() {
                                 />
                               </div>
                               <div class="col-span-6 ">
-                                <label
-                                  for="phone-number"
-                                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                                >
+                                <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                   Imagen
                                 </label>
                                 <input
@@ -504,7 +505,7 @@ export default function Content() {
                               type="submit"
                               class="text-white text-xl bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg  px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                             >
-                              Actualizar
+                              Actualizar Anuncio
                             </button>
                           </div>
                         </form>
@@ -530,7 +531,7 @@ export default function Content() {
               <div class="relative w-full h-full max-w-2xl md:h-auto">
                 {/* <!-- Modal content --> */}
                 <form
-                  onSubmit={handleCreateAdSubmit}
+                  onSubmit={handleSubmitCreateAd}
                   class="relative bg-[#161520] rounded-lg shadow "
                 >
                   {/* <!-- Modal header --> */}
@@ -553,9 +554,7 @@ export default function Content() {
                         xmlns="http://www.w3.org/2000/svg"
                       >
                         <path
-                          fill-rule="evenodd"
                           d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                          clip-rule="evenodd"
                         ></path>
                       </svg>
                     </button>
@@ -565,7 +564,6 @@ export default function Content() {
                     <div class="grid grid-cols-6 gap-6">
                       <div class="col-span-6 ">
                         <label
-                          for="first-name"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           Titulo
@@ -573,7 +571,7 @@ export default function Content() {
                         <input
                           type="text"
                           name="titulo"
-                          onChange={handleUpdateAdChange}
+                          onChange={handleChangeCreateAd}
                           class="shadow-sm bg-transparent outline-none placeholder:text-white  border border-gray-300  text-sm rounded-lg block w-full p-2.5 "
                           placeholder="Anuncio egresados"
                           required
@@ -581,7 +579,6 @@ export default function Content() {
                       </div>
                       <div class="col-span-6 ">
                         <label
-                          for="last-name"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           Descripcion
@@ -589,7 +586,7 @@ export default function Content() {
                         <textarea
                           type="text"
                           name="descripcion"
-                          onChange={handleUpdateAdChange}
+                          onChange={handleChangeCreateAd}
                           class="shadow-sm bg-transparent outline-none placeholder:text-white  border border-gray-300  text-sm rounded-lg block w-full p-2.5 "
                           placeholder="Green"
                           required
@@ -597,7 +594,6 @@ export default function Content() {
                       </div>
                       <div class="col-span-6 ">
                         <label
-                          for="email"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           Tipo
@@ -605,29 +601,29 @@ export default function Content() {
                         <input
                           type="text"
                           name="tipo"
+                          onChange={handleChangeCreateAd}
                           class="shadow-sm bg-transparent outline-none placeholder:text-white  border border-gray-300  text-sm rounded-lg block w-full p-2.5 "
                           placeholder="eventos, noticias, cursos o empleo"
                           required
                         />
                       </div>
                       <div class="col-span-6 ">
-                        <label
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                           Imagen
                         </label>
                         <input
-                          className="focus:outline-none block w-full text-lg cursor-pointer bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 "
-                          id="profileImage"
-                          name="image"
-                          ref={inputFileRef}
-                          onChange={handleUpdateAdChange}
                           type="file"
+                          name="image"
+                          
+                          onChange={handleChangeCreateAd}
+                          
+                          className="focus:outline-none block w-full text-lg cursor-pointer bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 "
+                          ref={inputFileRef}
+                          
                         />
                       </div>
                       <div class="col-span-6 sm:col-span-3">
                         <label
-                          for="department"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           Estado
@@ -635,15 +631,14 @@ export default function Content() {
                         <input
                           type="text"
                           name="set"
-                          onChange={handleUpdateAdChange}
+                          onChange={handleChangeCreateAd}
                           class="shadow-sm bg-transparent outline-none placeholder:text-white  border border-gray-300  text-sm rounded-lg block w-full p-2.5 "
                           placeholder="activo o inactivo"
-                          required=""
+                          required
                         />
                       </div>
                       <div class="col-span-6 sm:col-span-3">
                         <label
-                          for="company"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                           Url
@@ -651,10 +646,10 @@ export default function Content() {
                         <input
                           type="text"
                           name="url"
-                          onChange={handleUpdateAdChange}
+                          onChange={handleChangeCreateAd}
                           class="shadow-sm bg-transparent outline-none placeholder:text-white  border border-gray-300  text-sm rounded-lg block w-full p-2.5 "
                           placeholder="https......"
-                          required=""
+                          required
                         />
                       </div>
                     </div>
