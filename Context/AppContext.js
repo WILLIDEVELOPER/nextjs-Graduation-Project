@@ -39,7 +39,7 @@ export const AppProvider = ({ children }) => {
   const [ad, setAd] = useState({
     titulo:"",
     descripcion:"",
-    tipo: "",
+    image: "",
     set: "",
     url: ""
   })
@@ -341,7 +341,6 @@ export const AppProvider = ({ children }) => {
         {
           headers: {
             "x-access-token": getToken,
-            "Content-Type": "multipart/form-data",
           },
         }
       );
@@ -355,16 +354,15 @@ export const AppProvider = ({ children }) => {
   const handleChangeCreateAd = (e) => {
     const { name, value } = e.target;
   
-    const updatedAd = { ...ad }; // Copia el estado actual ad
+    const createdAd = { ...ad }; // Copia el estado actual ad
   
     if (name === "image") {
       setFile(e.target.files[0]); // Actualiza el estado file con el archivo de imagen
-      updatedAd[name] = e.target.files[0]["name"]; // Actualiza el campo image en el estado ad con el nombre del archivo
+      createdAd[name] = e.target.files[0].name; // Actualiza el campo image en el estado ad con el nombre del archivo
     } else {
-      updatedAd[name] = value; // Actualiza el campo correspondiente en el estado ad con el valor del input
+      createdAd[name] = value; // Actualiza el campo correspondiente en el estado ad con el valor del input
     }
-  
-    setAd(updatedAd); // Actualiza el estado ad con los cambios realizados
+    setAd(createdAd); // Actualiza el estado ad con los cambios realizados
   };
   
   const handleSubmitCreateAd = async (e) => {
@@ -377,11 +375,10 @@ export const AppProvider = ({ children }) => {
     }
   
     for (const key in ad) {
-      if (ad[key] !== undefined) {
+      if (ad[key] !== undefined && key != "image") {
         formData.append(key, ad[key]);
       }
     }
-  
     createAd(formData); // Envía el objeto FormData con la solicitud
   };
 

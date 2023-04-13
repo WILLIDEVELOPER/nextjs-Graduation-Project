@@ -19,9 +19,6 @@ export default function NavBar() {
             <li className="cursor-pointer hover:brightness-50" id="about" onClick={handleNav}>
               Acerca de
             </li>
-            <li className="cursor-pointer hover:brightness-50 " id="contact-us" onClick={handleNav}>
-              Contactanos
-            </li>
           </ul>
         </div>
         <div className="flex gap-[1rem] items-center font-bold text-[1.15rem]">
