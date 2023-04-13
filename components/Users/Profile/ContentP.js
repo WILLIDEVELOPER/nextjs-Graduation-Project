@@ -1,17 +1,92 @@
 import { appContext } from "@/Context/AppContext";
-import React, { useContext } from "react";
+import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
 
 export default function ContentP() {
-  let {
-    contentId,
-    handleUpdateChange,
-    handleUptSubmit,
-    inputFileRef,
-    setFile,
-  } = useContext(appContext);
+  let { contentId, handleUpdateChange, inputFileRef, file, userUpt, getToken } =
+    useContext(appContext);
   const style = {
     width: "calc(100vw - 13rem)",
   };
+
+  let formData = new FormData();
+
+  const [getUsuario, setGetUsuario] = useState([]);
+  const [getAdmin, setGetAdmin] = useState([]);
+
+  useEffect(() => {
+    const userData = localStorage.getItem("usuario");
+    if (userData) {
+      setGetUsuario(JSON.parse(userData));
+    }
+
+    const adminData = localStorage.getItem("admin");
+    if (adminData) {
+      setGetAdmin(JSON.parse(adminData));
+    }
+  }, []);
+
+  function isValidJson(jsonString) {
+    try {
+      const parsedJson = JSON.parse(jsonString);
+      return !!parsedJson.url;
+    } catch {
+      return false;
+    }
+  }
+
+  const updateUser = async () => {
+    try {
+      const { data: res } = await axios.patch(
+        `https://nodejs-jwt-prueba.vercel.app/api/users/${getAdmin._id}`,
+        formData,
+        {
+          headers: {
+            "x-access-token": getToken,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      setGetAdmin(res)
+      console.log(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUptSubmit = () => {
+    if (file) {
+      formData.append("profileImage", file);
+    }
+
+    for (const key in userUpt) {
+      if (
+        userUpt[key] != "" &&
+        key != "experience" &&
+        key != "education" &&
+        key != "personalInfo"
+      ) {
+        formData.append(key, userUpt[key]);
+      } else if (key == "experience" || key == "education") {
+        const objeto = userUpt[key][0];
+        for (const item in objeto) {
+          if (objeto[item] != "") {
+            formData.append(key, JSON.stringify(userUpt[key][0]));
+          }
+        }
+      } else if (key == "personalInfo") {
+        const objetoDos = userUpt[key];
+        for (const el in objetoDos) {
+          if (objetoDos[el] != "") {
+            formData.append(key, JSON.stringify(userUpt[key]));
+          }
+        }
+      }
+    }
+
+    updateUser()
+  };
+
   if (contentId == "HomeUser") {
     return (
       <div
@@ -43,16 +118,6 @@ export default function ContentP() {
               </div>
             </div>
             <div className="flex w-full gap-[1rem] justify-around ">
-              <div className="flex w-full flex-col gap-[0.3rem]">
-                <label>Contraseña</label>
-                <input
-                  type="password"
-                  name="password"
-                  onChange={handleUpdateChange}
-                  className="px-[0.6rem] bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 py-[0.3rem]"
-                  placeholder="**********"
-                />
-              </div>
               <div className="flex w-full flex-col gap-[0.3rem]">
                 <label>Puesto de Trabajo</label>
                 <input
@@ -109,32 +174,38 @@ export default function ContentP() {
               </div>
             </div>
             <div className="flex w-full flex-col gap-[0.3rem]">
-              <label
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
+              <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                 Imagen de Perfil
               </label>
               <input
-                className="focus:outline-none block w-full text-lg cursor-pointer bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 "
-                id="profileImage"
-                name="profileImage"
-                ref={inputFileRef}
-                onChange={handleUpdateChange}
                 type="file"
+                name="profileImage"
+                onChange={handleUpdateChange}
+                className="focus:outline-none block w-full text-lg cursor-pointer bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 "
+                ref={inputFileRef}
               />
             </div>
           </div>
           <div className=" flex flex-col gap-[1.5rem]">
             <img
               className="rounded-full w-[25rem] h-[17rem]"
-              src="https://images.pexels.com/photos/247899/pexels-photo-247899.jpeg"
+              src={
+                getAdmin && isValidJson(getAdmin.profileImage)
+                  ? JSON.parse(getAdmin.profileImage)?.url
+                  : getUsuario && isValidJson(getUsuario.profileImage)
+                  ? JSON.parse(getUsuario.profileImage)?.url
+                  : "https://i.imgur.com/gxw3HHE.png"
+              }
               alt=""
             />
-            <h1 className="text-center text-xl">UserName</h1>
+            <h1 className="text-center text-xl">
+              {getAdmin.username || getUsuario.username}
+            </h1>
           </div>
         </div>
         <div>
           <button
+            type="button"
             onClick={handleUptSubmit}
             className="cursor-pointer w-[10rem] text-2xl bg-[#161520] rounded-xl hover:bg-slate-200 hover:text-slate-800 py-[0.5rem] px-[0.3rem] "
           >
@@ -189,20 +260,28 @@ export default function ContentP() {
           <div className=" flex flex-col gap-[1.5rem]">
             <img
               className="rounded-full w-[25rem] h-[17rem]"
-              src="https://images.pexels.com/photos/247899/pexels-photo-247899.jpeg"
+              src={
+                getAdmin && isValidJson(getAdmin.profileImage)
+                  ? JSON.parse(getAdmin.profileImage)?.url
+                  : getUsuario && isValidJson(getUsuario.profileImage)
+                  ? JSON.parse(getUsuario.profileImage)?.url
+                  : "https://i.imgur.com/gxw3HHE.png"
+              }
               alt=""
             />
-            <h1 className="text-center text-xl">UserName</h1>
+            <h1 className="text-center text-xl">
+              {getAdmin.username || getUsuario.username}
+            </h1>
           </div>
         </div>
-        <div>
+        {/* <div>
           <button
-            onClick={handleUptSubmit}
+            // onClick={handleUptSubmit}
             className="cursor-pointer w-[10rem] text-2xl bg-[#161520] rounded-xl hover:bg-slate-200 hover:text-slate-800 py-[0.5rem] px-[0.3rem] "
           >
             Guardar
           </button>
-        </div>
+        </div> */}
       </div>
     );
   } else if (contentId == "EduUser") {
@@ -261,20 +340,28 @@ export default function ContentP() {
           <div className=" flex flex-col gap-[1.5rem]">
             <img
               className="rounded-full w-[25rem] h-[17rem]"
-              src="https://images.pexels.com/photos/247899/pexels-photo-247899.jpeg"
+              src={
+                getAdmin && isValidJson(getAdmin.profileImage)
+                  ? JSON.parse(getAdmin.profileImage)?.url
+                  : getUsuario && isValidJson(getUsuario.profileImage)
+                  ? JSON.parse(getUsuario.profileImage)?.url
+                  : "https://i.imgur.com/gxw3HHE.png"
+              }
               alt=""
             />
-            <h1 className="text-center text-xl">UserName</h1>
+            <h1 className="text-center text-xl">
+              {getAdmin.username || getUsuario.username}
+            </h1>
           </div>
         </div>
-        <div>
+        {/* <div>
           <button
-            onClick={handleUptSubmit}
+            // onClick={handleUptSubmit(getAdmin._id || getUsuario.id)}
             className="cursor-pointer w-[10rem] text-2xl bg-[#161520] rounded-xl hover:bg-slate-200 hover:text-slate-800 py-[0.5rem] px-[0.3rem] "
           >
             Guardar
           </button>
-        </div>
+        </div> */}
       </div>
     );
   } else if (contentId == "Personal") {
@@ -355,20 +442,28 @@ export default function ContentP() {
           <div className=" flex flex-col gap-[1.5rem]">
             <img
               className="rounded-full w-[25rem] h-[17rem]"
-              src="https://images.pexels.com/photos/247899/pexels-photo-247899.jpeg"
+              src={
+                getAdmin && isValidJson(getAdmin.profileImage)
+                  ? JSON.parse(getAdmin.profileImage)?.url
+                  : getUsuario && isValidJson(getUsuario.profileImage)
+                  ? JSON.parse(getUsuario.profileImage)?.url
+                  : "https://i.imgur.com/gxw3HHE.png"
+              }
               alt=""
             />
-            <h1 className="text-center text-xl">UserName</h1>
+            <h1 className="text-center text-xl">
+              {getAdmin.username || getUsuario.username}
+            </h1>
           </div>
         </div>
-        <div>
+        {/* <div>
           <button
-            onClick={handleUptSubmit}
+            // onClick={handleUptSubmit(getAdmin._id || getUsuario.id)}
             className="cursor-pointer w-[10rem] text-2xl bg-[#161520] rounded-xl hover:bg-slate-200 hover:text-slate-800 py-[0.5rem] px-[0.3rem] "
           >
             Guardar
           </button>
-        </div>
+        </div> */}
       </div>
     );
   }
