@@ -1,11 +1,16 @@
 import { appContext } from "@/Context/AppContext";
-import React, { use, useContext } from "react";
+import React, { use, useContext, useEffect } from "react";
 import Login from "../Auth/login";
 import Register from "../Auth/register";
 
 export default function Content({ ruta }) {
 
-  const {handleContent } = useContext(appContext)
+  const {handleContent, setContentId } = useContext(appContext)
+
+  useEffect(() => {
+    setContentId("home")
+  }, [])
+  
 
   const style = {
     "--opacidad-negro": 0.7,

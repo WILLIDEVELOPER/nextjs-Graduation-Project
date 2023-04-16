@@ -15,7 +15,8 @@ export default function Content() {
     handleSubmitCreateAd,
 
     handleChangeUpdateAd,
-    handleSubmitUpdateAd
+    handleSubmitUpdateAd,
+    setContentId
   } = useContext(appContext);
 
   const [showEditUser, setShowEditUser] = useState(false);
@@ -54,6 +55,7 @@ export default function Content() {
   useEffect(() => {
     const tokenDatos = localStorage.getItem("token");
     getAllUsers(tokenDatos);
+    setContentId("HomeAdmin")
   }, []);
 
   if (contentId == "HomeAdmin") {

@@ -185,8 +185,14 @@ export const AppProvider = ({ children }) => {
   const handleRegChange = (e) => {
     const { name, value } = e.target;
     let newRoles = [...register.roles];
+
     if (name === "roles") {
-      newRoles = value.split(",").map((role) => role.trim());
+      if (value.includes(",")) {
+        newRoles = value.split(",").map((role) => role.trim());
+      }else{
+        newRoles = [value]
+      }
+      
       const invalidRole = newRoles.filter((element) => {
         if (newRoles.length > 1) {
           if (element.includes("egresado")) {
@@ -212,6 +218,7 @@ export const AppProvider = ({ children }) => {
   const handleRegSubmit = (e) => {
     e.preventDefault();
     signUp(register);
+    console.log(register);
   };
 
   //? Manejo del signIn
@@ -485,7 +492,8 @@ export const AppProvider = ({ children }) => {
         getAllAds,
         file,
         userUpt,
-        getToken
+        getToken,
+        setContentId
       }}
     >
       {children}

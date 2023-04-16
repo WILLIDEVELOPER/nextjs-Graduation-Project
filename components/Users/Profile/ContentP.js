@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 
 export default function ContentP() {
-  let { contentId, handleUpdateChange, inputFileRef, file, userUpt, getToken } =
+  let { contentId, handleUpdateChange, inputFileRef, file, userUpt, getToken, setContentId } =
     useContext(appContext);
   const style = {
     width: "calc(100vw - 13rem)",
@@ -24,6 +24,7 @@ export default function ContentP() {
     if (adminData) {
       setGetAdmin(JSON.parse(adminData));
     }
+    setContentId("HomeUser")
   }, []);
 
   function isValidJson(jsonString) {
