@@ -185,34 +185,19 @@ export const AppProvider = ({ children }) => {
   const handleRegChange = (e) => {
     const { name, value } = e.target;
     let newRoles = [...register.roles];
-
     if (name === "roles") {
       if (value.includes(",")) {
         newRoles = value.split(",").map((role) => role.trim());
-      }else{
-        newRoles = [value]
-      }
-      
-      const invalidRole = newRoles.filter((element) => {
-        if (newRoles.length > 1) {
-          if (element.includes("egresado")) {
-            return true;
-          }
-        }
-        return false;
-      });
-      if (invalidRole.length > 0) {
-        setError(
-          "La combinación de roles es inválida: " + invalidRole.join(", ")
-        );
       } else {
-        setError("Role Valido");
-        setRegister({
-          ...register,
-          [name]: name === "roles" ? newRoles : value,
-        });
+        newRoles = [value];
       }
     }
+
+    setError("Role Valido");
+    setRegister({
+      ...register,
+      [name]: name === "roles" ? newRoles : value,
+    });
   };
 
   const handleRegSubmit = (e) => {
