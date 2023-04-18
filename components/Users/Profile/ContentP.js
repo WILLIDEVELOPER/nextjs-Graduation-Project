@@ -36,24 +36,6 @@ export default function ContentP() {
     }
   }
 
-  const updateUser = async () => {
-    try {
-      const { data: res } = await axios.patch(
-        `https://nodejs-jwt-prueba.vercel.app/api/users/${getAdmin._id}`,
-        formData,
-        {
-          headers: {
-            "x-access-token": getToken,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      setGetAdmin(res)
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const handleUptSubmit = () => {
     if (file) {
@@ -85,7 +67,31 @@ export default function ContentP() {
       }
     }
 
-    updateUser()
+    if (getAdmin) {
+      updateUser(getAdmin._id)
+    }
+
+    if (getUsuario) {
+      updateUser(getUsuario._id)
+    }
+  };
+
+  
+  const updateUser = async (id) => {
+    try {
+      const { data: respuesta } = await axios.patch(
+        `https://nodejs-jwt-prueba.vercel.app/api/users/${id}`,
+        formData,
+        {
+          headers: {
+            "x-access-token": getToken,
+          },
+        }
+      );
+      console.log(respuesta);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   if (contentId == "HomeUser") {
