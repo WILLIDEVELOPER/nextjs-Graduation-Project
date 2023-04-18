@@ -1,22 +1,67 @@
 import { appContext } from "@/Context/AppContext";
+import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 
 export default function NavbarU() {
   const { handleNav, router, getAds, setGetAds, getAllAds, logOut } = useContext(appContext);
   const [showMenu, setShowMenu] = useState(false);
 
+  const [getUser, setGetUser] = useState({})
+  const [getToken, setGetToken] = useState("")
+
   const [getUsuario, setGetUsuario] = useState([]);
   const [getAdmin, setGetAdmin] = useState([]);
+
+  function isValidJson(jsonString) {
+    try {
+      const parsedJson = JSON.parse(jsonString);
+      return !!parsedJson.url;
+    } catch {
+      return false;
+    }
+  }
+
+  const getUserById = async(id) =>{
+    if (id) {
+      try {
+        const { data: resUser } = await axios.get(
+          `https://nodejs-jwt-prueba.vercel.app/api/users/${id}`,
+          {
+            headers: {
+              "x-access-token": getToken,
+            },
+          }
+        );
+        console.log(resUser);
+        setGetUser(resUser)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
   useEffect(() => {
     const userData = localStorage.getItem("usuario");
+    const token = localStorage.getItem("token")
     if (userData) {
       setGetUsuario(JSON.parse(userData));
+      setGetToken(token)
     }
 
     const adminData = localStorage.getItem("admin");
     if (adminData) {
       setGetAdmin(JSON.parse(adminData));
+      setGetToken(token)
     }
+
+    if (getAdmin) {
+      getUserById(getAdmin._id)
+    }
+
+    if (getUsuario) {
+      getUserById(getUsuario._id)
+    }
+
   }, []);
 
   return (
@@ -94,12 +139,16 @@ export default function NavbarU() {
           </ul>
         </div>
         <h1 className="capitalize font-bold text-xl">
-          {getAdmin.username || getUsuario.username}
+          {getUser.username}
         </h1>
         <div className="relative hover:bg-red-50 rounded-full">
           <img
             className="w-[4rem] rounded-full cursor-pointer"
-            src="https://pic.onlinewebfonts.com/svg/img_329115.png"
+            src={
+              isValidJson(getUser.profileImage)
+                ? JSON.parse(getUser.profileImage)?.url
+                : "https://i.imgur.com/gxw3HHE.png"
+            }
             alt=""
             onClick={() => setShowMenu(!showMenu)}
           />

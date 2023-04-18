@@ -3,8 +3,14 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 
 export default function ContentP() {
-  let { contentId, handleUpdateChange, inputFileRef, file, userUpt, getToken, setContentId } =
-    useContext(appContext);
+  let {
+    contentId,
+    handleUpdateChange,
+    inputFileRef,
+    file,
+    userUpt,
+    setContentId,
+  } = useContext(appContext);
   const style = {
     width: "calc(100vw - 13rem)",
   };
@@ -13,18 +19,50 @@ export default function ContentP() {
 
   const [getUsuario, setGetUsuario] = useState([]);
   const [getAdmin, setGetAdmin] = useState([]);
+  const [getToken, setGetToken] = useState("")
+  const [getUser, setGetUser] = useState({})
+
+  const getUserById = async(id) =>{
+    if (id) {
+      try {
+        const { data: resUser } = await axios.get(
+          `https://nodejs-jwt-prueba.vercel.app/api/users/${id}`,
+          {
+            headers: {
+              "x-access-token": getToken,
+            },
+          }
+        );
+        console.log(resUser);
+        setGetUser(resUser)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
 
   useEffect(() => {
     const userData = localStorage.getItem("usuario");
+    const token = localStorage.getItem("token")
     if (userData) {
       setGetUsuario(JSON.parse(userData));
+      setGetToken(token)
     }
 
     const adminData = localStorage.getItem("admin");
     if (adminData) {
       setGetAdmin(JSON.parse(adminData));
+      setGetToken(token)
     }
-    setContentId("HomeUser")
+    setContentId("HomeUser");
+
+    if (getAdmin) {
+      getUserById(getAdmin._id)
+    }
+
+    if (getUsuario) {
+      getUserById(getUsuario._id)
+    }
   }, []);
 
   function isValidJson(jsonString) {
@@ -35,7 +73,6 @@ export default function ContentP() {
       return false;
     }
   }
-
 
   const handleUptSubmit = () => {
     if (file) {
@@ -68,29 +105,30 @@ export default function ContentP() {
     }
 
     if (getAdmin) {
-      updateUser(getAdmin._id)
+      updateUser(getAdmin._id);
     }
 
     if (getUsuario) {
-      updateUser(getUsuario._id)
+      updateUser(getUsuario._id);
     }
   };
 
-  
   const updateUser = async (id) => {
-    try {
-      const { data: respuesta } = await axios.patch(
-        `https://nodejs-jwt-prueba.vercel.app/api/users/${id}`,
-        formData,
-        {
-          headers: {
-            "x-access-token": getToken,
-          },
-        }
-      );
-      console.log(respuesta);
-    } catch (error) {
-      console.log(error);
+    if (id ) {
+      try {
+        const { data: respuesta } = await axios.patch(
+          `https://nodejs-jwt-prueba.vercel.app/api/users/${id}`,
+          formData,
+          {
+            headers: {
+              "x-access-token": getToken,
+            },
+          }
+        );
+        console.log(respuesta);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -197,16 +235,14 @@ export default function ContentP() {
             <img
               className="rounded-full w-[25rem] h-[17rem]"
               src={
-                getAdmin && isValidJson(getAdmin.profileImage)
-                  ? JSON.parse(getAdmin.profileImage)?.url
-                  : getUsuario && isValidJson(getUsuario.profileImage)
-                  ? JSON.parse(getUsuario.profileImage)?.url
+                isValidJson(getUser.profileImage)
+                  ? JSON.parse(getUser.profileImage)?.url
                   : "https://i.imgur.com/gxw3HHE.png"
               }
               alt=""
             />
             <h1 className="text-center text-xl">
-              {getAdmin.username || getUsuario.username}
+              {getUser.username}
             </h1>
           </div>
         </div>
@@ -268,16 +304,14 @@ export default function ContentP() {
             <img
               className="rounded-full w-[25rem] h-[17rem]"
               src={
-                getAdmin && isValidJson(getAdmin.profileImage)
-                  ? JSON.parse(getAdmin.profileImage)?.url
-                  : getUsuario && isValidJson(getUsuario.profileImage)
-                  ? JSON.parse(getUsuario.profileImage)?.url
+                isValidJson(getUser.profileImage)
+                  ? JSON.parse(getUser.profileImage)?.url
                   : "https://i.imgur.com/gxw3HHE.png"
               }
               alt=""
             />
             <h1 className="text-center text-xl">
-              {getAdmin.username || getUsuario.username}
+              {getUser.username}
             </h1>
           </div>
         </div>
@@ -348,16 +382,14 @@ export default function ContentP() {
             <img
               className="rounded-full w-[25rem] h-[17rem]"
               src={
-                getAdmin && isValidJson(getAdmin.profileImage)
-                  ? JSON.parse(getAdmin.profileImage)?.url
-                  : getUsuario && isValidJson(getUsuario.profileImage)
-                  ? JSON.parse(getUsuario.profileImage)?.url
+                isValidJson(getUser.profileImage)
+                  ? JSON.parse(getUser.profileImage)?.url
                   : "https://i.imgur.com/gxw3HHE.png"
               }
               alt=""
             />
             <h1 className="text-center text-xl">
-              {getAdmin.username || getUsuario.username}
+              {getUser.username}
             </h1>
           </div>
         </div>
@@ -450,16 +482,14 @@ export default function ContentP() {
             <img
               className="rounded-full w-[25rem] h-[17rem]"
               src={
-                getAdmin && isValidJson(getAdmin.profileImage)
-                  ? JSON.parse(getAdmin.profileImage)?.url
-                  : getUsuario && isValidJson(getUsuario.profileImage)
-                  ? JSON.parse(getUsuario.profileImage)?.url
+                isValidJson(getUser.profileImage)
+                  ? JSON.parse(getUser.profileImage)?.url
                   : "https://i.imgur.com/gxw3HHE.png"
               }
               alt=""
             />
             <h1 className="text-center text-xl">
-              {getAdmin.username || getUsuario.username}
+              {getUser.username}
             </h1>
           </div>
         </div>
