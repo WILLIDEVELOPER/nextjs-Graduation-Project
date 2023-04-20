@@ -10,6 +10,9 @@ export default function ContentP() {
     file,
     userUpt,
     setContentId,
+    mesageUpt,
+    setMesageUpt,
+    router
   } = useContext(appContext);
   const style = {
     width: "calc(100vw - 13rem)",
@@ -19,10 +22,10 @@ export default function ContentP() {
 
   const [getUsuario, setGetUsuario] = useState([]);
   const [getAdmin, setGetAdmin] = useState([]);
-  const [getToken, setGetToken] = useState("")
-  const [getUser, setGetUser] = useState({})
+  const [getToken, setGetToken] = useState("");
+  const [getUser, setGetUser] = useState({});
 
-  const getUserById = async(id) =>{
+  const getUserById = async (id) => {
     if (id) {
       try {
         const { data: resUser } = await axios.get(
@@ -34,34 +37,34 @@ export default function ContentP() {
           }
         );
         console.log(resUser);
-        setGetUser(resUser)
+        setGetUser(resUser);
       } catch (error) {
         console.log(error);
       }
     }
-  }
+  };
 
   useEffect(() => {
     const userData = localStorage.getItem("usuario");
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
     if (userData) {
       setGetUsuario(JSON.parse(userData));
-      setGetToken(token)
+      setGetToken(token);
     }
 
     const adminData = localStorage.getItem("admin");
     if (adminData) {
       setGetAdmin(JSON.parse(adminData));
-      setGetToken(token)
+      setGetToken(token);
     }
     setContentId("HomeUser");
 
     if (getAdmin) {
-      getUserById(getAdmin._id)
+      getUserById(getAdmin._id);
     }
 
     if (getUsuario) {
-      getUserById(getUsuario._id)
+      getUserById(getUsuario._id);
     }
   }, []);
 
@@ -82,23 +85,29 @@ export default function ContentP() {
     for (const key in userUpt) {
       if (
         userUpt[key] != "" &&
-        key != "experience" &&
-        key != "education" &&
-        key != "personalInfo"
+        userUpt[key] != undefined &&
+        key != "profileImage"
       ) {
-        formData.append(key, userUpt[key]);
-      } else if (key == "experience" || key == "education") {
-        const objeto = userUpt[key][0];
-        for (const item in objeto) {
-          if (objeto[item] != "") {
-            formData.append(key, JSON.stringify(userUpt[key][0]));
+        if (
+          userUpt[key] != "" &&
+          key != "experience" &&
+          key != "education" &&
+          key != "personalInfo"
+        ) {
+          formData.append(key, userUpt[key]);
+        } else if (key == "experience" || key == "education") {
+          const objeto = userUpt[key][0];
+          for (const item in objeto) {
+            if (objeto[item] != "") {
+              formData.append(key, JSON.stringify(userUpt[key][0]));
+            }
           }
-        }
-      } else if (key == "personalInfo") {
-        const objetoDos = userUpt[key];
-        for (const el in objetoDos) {
-          if (objetoDos[el] != "") {
-            formData.append(key, JSON.stringify(userUpt[key]));
+        } else if (key == "personalInfo") {
+          const objetoDos = userUpt[key];
+          for (const el in objetoDos) {
+            if (objetoDos[el] != "") {
+              formData.append(key, JSON.stringify(userUpt[key]));
+            }
           }
         }
       }
@@ -106,15 +115,17 @@ export default function ContentP() {
 
     if (getAdmin) {
       updateUser(getAdmin._id);
+      setMesageUpt(!mesageUpt)
     }
 
     if (getUsuario) {
       updateUser(getUsuario._id);
+      setMesageUpt(!mesageUpt)
     }
   };
 
   const updateUser = async (id) => {
-    if (id ) {
+    if (id) {
       try {
         const { data: respuesta } = await axios.patch(
           `https://nodejs-jwt-prueba.vercel.app/api/users/${id}`,
@@ -237,13 +248,13 @@ export default function ContentP() {
               src={
                 isValidJson(getUser.profileImage)
                   ? JSON.parse(getUser.profileImage)?.url
+                  : isValidJson(getUser.imagen)
+                  ? JSON.parse(getUser.imagen)?.url
                   : "https://i.imgur.com/gxw3HHE.png"
               }
               alt=""
             />
-            <h1 className="text-center text-xl">
-              {getUser.username}
-            </h1>
+            <h1 className="text-center text-xl">{getUser.username}</h1>
           </div>
         </div>
         <div>
@@ -255,6 +266,59 @@ export default function ContentP() {
             Guardar
           </button>
         </div>
+        {mesageUpt && (
+                    <div class="fixed  z-50 flex    justify-center  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
+                      <div class="relative  w-full h-full max-w-2xl md:h-auto">
+                        {/* <!-- Modal content --> */}
+                        <form class="relative bg-[#161520] rounded-lg shadow ">
+                          {/* <!-- Modal header --> */}
+                          <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                            <h3 class="text-xl font-bold text-white">
+                              Mensaje De Respuesta
+                            </h3>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setMesageUpt(!mesageUpt);
+                              }}
+                              class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                            >
+                              <svg
+                                aria-hidden="true"
+                                class="w-5 h-5"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <path
+                                  fill-rule="evenodd"
+                                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                  clip-rule="evenodd"
+                                ></path>
+                              </svg>
+                            </button>
+                          </div>
+                          {/* <!-- Modal body --> */}
+                          <div class="p-6   flex gap-[0.5rem]">
+                            <p>Usuario Actualizado Con exito</p>
+                          </div>
+                          {/* <!-- Modal footer --> */}
+                          <div class="flex justify-center items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                            <button
+                              type="submit"
+                              onClick={() => {
+                                setMesageUpt(!mesageUpt);
+                                router.push("/ads")
+                              }}
+                              class="text-white bg-blue-500 capitalize  hover:bg-red-800    font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                            >
+                              Aceptar
+                            </button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  )}
       </div>
     );
   } else if (contentId == "ExpUser") {
@@ -306,13 +370,13 @@ export default function ContentP() {
               src={
                 isValidJson(getUser.profileImage)
                   ? JSON.parse(getUser.profileImage)?.url
+                  : isValidJson(getUser.imagen)
+                  ? JSON.parse(getUser.imagen)?.url
                   : "https://i.imgur.com/gxw3HHE.png"
               }
               alt=""
             />
-            <h1 className="text-center text-xl">
-              {getUser.username}
-            </h1>
+            <h1 className="text-center text-xl">{getUser.username}</h1>
           </div>
         </div>
         {/* <div>
@@ -384,13 +448,13 @@ export default function ContentP() {
               src={
                 isValidJson(getUser.profileImage)
                   ? JSON.parse(getUser.profileImage)?.url
+                  : isValidJson(getUser.imagen)
+                  ? JSON.parse(getUser.imagen)?.url
                   : "https://i.imgur.com/gxw3HHE.png"
               }
               alt=""
             />
-            <h1 className="text-center text-xl">
-              {getUser.username}
-            </h1>
+            <h1 className="text-center text-xl">{getUser.username}</h1>
           </div>
         </div>
         {/* <div>
@@ -484,13 +548,13 @@ export default function ContentP() {
               src={
                 isValidJson(getUser.profileImage)
                   ? JSON.parse(getUser.profileImage)?.url
+                  : isValidJson(getUser.imagen)
+                  ? JSON.parse(getUser.imagen)?.url
                   : "https://i.imgur.com/gxw3HHE.png"
               }
               alt=""
             />
-            <h1 className="text-center text-xl">
-              {getUser.username}
-            </h1>
+            <h1 className="text-center text-xl">{getUser.username}</h1>
           </div>
         </div>
         {/* <div>

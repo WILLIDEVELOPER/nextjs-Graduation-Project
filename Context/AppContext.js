@@ -82,6 +82,12 @@ export const AppProvider = ({ children }) => {
   const [file, setFile] = useState(null);
   let data = {};
   const [getToken, setGetToken] = useState("")
+  const [listUpdate, setListUpdate] = useState(false)
+  const [mesage, setMesage] = useState(false);
+  const [mesageUpt, setMesageUpt] = useState(false);
+  const [mesageAdd, setMesageAdd] = useState(false);
+  const [updateAdId, setUpdateAdId] = useState(false);
+  const [createAdId, setCreateAdId] = useState(false);
   //*Funciones
 
   const getAllAds = async () => {
@@ -104,6 +110,14 @@ export const AppProvider = ({ children }) => {
     setGetToken(tokenData)
     getAllAds();
   }, []);
+
+
+  useEffect(() => {
+    const tokenData = localStorage.getItem("token")
+    setGetToken(tokenData)
+    getAllAds();
+  }, [listUpdate]);
+  
 
   //? Content del home
   const handleNav = (e) => {
@@ -348,7 +362,7 @@ export const AppProvider = ({ children }) => {
   
     const createdAd = { ...ad }; // Copia el estado actual ad
   
-    if (name === "image") {
+    if (name === "image" ) {
       setFile(e.target.files[0]); // Actualiza el estado file con el archivo de imagen
       createdAd[name] = e.target.files[0].name; // Actualiza el campo image en el estado ad con el nombre del archivo
     } else {
@@ -371,7 +385,10 @@ export const AppProvider = ({ children }) => {
         formData.append(key, ad[key]);
       }
     }
-    createAd(formData); // Envía el objeto FormData con la solicitud
+    createAd(formData);
+    setCreateAdId(!createAdId)
+    setMesageAdd(!mesageAdd)
+    setListUpdate(!listUpdate) // Envía el objeto FormData con la solicitud
   };
 
 
@@ -417,13 +434,18 @@ export const AppProvider = ({ children }) => {
     }
   
     for (const key in ad) {
-      if (ad[key] !== undefined) {
-        formData.append(key, ad[key]);
+      if (ad[key] != "" && ad[key] != undefined && key != "image") {
+        // Verifica si la propiedad está definida (no es null ni undefined)
+        formData.append(key, ad[key]); // Agrega la propiedad y su valor al objeto FormData
       }
     }
   
     updateAd(formData, id); // Envía el objeto FormData con la solicitud
+    setUpdateAdId(!updateAdId);
+    setMesageUpt(!mesageUpt);
+    setListUpdate(!listUpdate);
   };
+  
 
   return (
     <appContext.Provider
@@ -478,7 +500,19 @@ export const AppProvider = ({ children }) => {
         file,
         userUpt,
         getToken,
-        setContentId
+        setContentId,
+        setListUpdate,
+        listUpdate,
+        mesage,
+        setMesage,
+        mesageUpt,
+        setMesageUpt,
+        updateAdId,
+        setUpdateAdId,
+        mesageAdd,
+        setMesageAdd,
+        createAdId,
+        setCreateAdId
       }}
     >
       {children}

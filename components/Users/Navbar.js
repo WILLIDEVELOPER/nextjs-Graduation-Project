@@ -139,7 +139,7 @@ export default function NavbarU() {
           </ul>
         </div>
         <h1 className="capitalize font-bold text-xl">
-          {getUser.username}
+                {getUser.username}
         </h1>
         <div className="relative hover:bg-red-50 rounded-full">
           <img
