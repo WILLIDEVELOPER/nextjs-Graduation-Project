@@ -66,7 +66,6 @@ export default function Register() {
             <option value="admin">Admin</option>
             <option value="egresado">Egresado</option>
             <option value="lider universitario">Lider Universitario</option>
-            <option value="admin, lider universitario">Admin, Lider Universitario</option>
           </select>
           <p className="mt-[0.5rem] text-center text-white font-bold text-xl">
             {error}
