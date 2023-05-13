@@ -29,6 +29,7 @@ export default function Content() {
     setMesageAdd,
     createAdId,
     setCreateAdId,
+    messageDelete,
   } = useContext(appContext);
 
   const [showEditUser, setShowEditUser] = useState(false);
@@ -185,7 +186,7 @@ export default function Content() {
                           </div>
                           {/* <!-- Modal body --> */}
                           <div class="p-6   flex gap-[0.5rem]">
-                            <p>Usuario Eliminado Con exito</p>
+                            <p>{messageDelete}</p>
                           </div>
                           {/* <!-- Modal footer --> */}
                           <div class="flex justify-center items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
@@ -410,7 +411,7 @@ export default function Content() {
                           </div>
                           {/* <!-- Modal body --> */}
                           <div class="p-6   flex gap-[0.5rem]">
-                            <p>Anuncio Eliminado Con exito</p>
+                            <p>{messageDelete}</p>
                           </div>
                           {/* <!-- Modal footer --> */}
                           <div class="flex justify-center items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">

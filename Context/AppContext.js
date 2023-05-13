@@ -37,12 +37,12 @@ export const AppProvider = ({ children }) => {
   const [getAds, setGetAds] = useState([]);
   const [getUsers, setGetUsers] = useState([]);
   const [ad, setAd] = useState({
-    titulo:"",
-    descripcion:"",
+    titulo: "",
+    descripcion: "",
     image: "",
     set: "",
-    url: ""
-  })
+    url: "",
+  });
   const [userUpt, setUserUpt] = useState({
     username: "",
     email: "",
@@ -81,13 +81,15 @@ export const AppProvider = ({ children }) => {
   const inputFileRef = useRef();
   const [file, setFile] = useState(null);
   let data = {};
-  const [getToken, setGetToken] = useState("")
-  const [listUpdate, setListUpdate] = useState(false)
+  const [getToken, setGetToken] = useState("");
+  const [listUpdate, setListUpdate] = useState(false);
   const [mesage, setMesage] = useState(false);
   const [mesageUpt, setMesageUpt] = useState(false);
   const [mesageAdd, setMesageAdd] = useState(false);
   const [updateAdId, setUpdateAdId] = useState(false);
   const [createAdId, setCreateAdId] = useState(false);
+
+  const [messageDelete, setMessageDelete] = useState("");
   //*Funciones
 
   const getAllAds = async () => {
@@ -105,19 +107,16 @@ export const AppProvider = ({ children }) => {
       ? setContentId("HomeAdmin")
       : setContentId("home");
 
-
-    const tokenData = localStorage.getItem("token")
-    setGetToken(tokenData)
+    const tokenData = localStorage.getItem("token");
+    setGetToken(tokenData);
     getAllAds();
   }, []);
 
-
   useEffect(() => {
-    const tokenData = localStorage.getItem("token")
-    setGetToken(tokenData)
+    const tokenData = localStorage.getItem("token");
+    setGetToken(tokenData);
     getAllAds();
   }, [listUpdate]);
-  
 
   //? Content del home
   const handleNav = (e) => {
@@ -248,7 +247,6 @@ export const AppProvider = ({ children }) => {
   //   setGetUsers(res);
   // };
 
-
   //* Peril usuario
 
   const handleUpdateChange = (e) => {
@@ -256,7 +254,7 @@ export const AppProvider = ({ children }) => {
 
     // Copia actual de userUpt
     const updatedUserUpt = { ...userUpt }; // Copia el estado actual ad
-  
+
     if (name === "profileImage") {
       setFile(e.target.files[0]); // Actualiza el estado file con el archivo de imagen
       updatedUserUpt[name] = e.target.files[0]["name"]; // Actualiza el campo image en el estado ad con el nombre del archivo
@@ -287,8 +285,6 @@ export const AppProvider = ({ children }) => {
     setUserUpt(data);
   };
 
-
-
   const deleteUser = async (id) => {
     try {
       const { data: res } = await axios.delete(
@@ -299,8 +295,10 @@ export const AppProvider = ({ children }) => {
           },
         }
       );
+      setMessageDelete("Usuario eliminado con exito");
       console.log(res);
     } catch (error) {
+      setMessageDelete("Se necesita rol de admin para eliminar un usuario");
       console.log(error);
     }
   };
@@ -314,28 +312,27 @@ export const AppProvider = ({ children }) => {
           // Agrega otros encabezados necesarios aquí
         },
       };
-  
+
       const { data: resDelete } = await axios.delete(
         `https://nodejs-jwt-prueba.vercel.app/api/ads/${id}`,
         config // Pasa el objeto de configuración con los encabezados a la petición
       );
       console.log(resDelete);
+      setMessageDelete("Anuncio eliminado con exito");
     } catch (error) {
+      setMessageDelete("Se necesita rol de admin para eliminar un anuncio");
       console.log(error);
     }
   };
-  
 
   // cerrado de sesion
 
   const logOut = () => {
-    localStorage.removeItem("admin")
-    localStorage.removeItem("usuario")
-    localStorage.removeItem("token")
-    router.push("/")
+    localStorage.removeItem("admin");
+    localStorage.removeItem("usuario");
+    localStorage.removeItem("token");
+    router.push("/");
   };
-
-
 
   //* Ad update
 
@@ -359,10 +356,10 @@ export const AppProvider = ({ children }) => {
 
   const handleChangeCreateAd = (e) => {
     const { name, value } = e.target;
-  
+
     const createdAd = { ...ad }; // Copia el estado actual ad
-  
-    if (name === "image" ) {
+
+    if (name === "image") {
       setFile(e.target.files[0]); // Actualiza el estado file con el archivo de imagen
       createdAd[name] = e.target.files[0].name; // Actualiza el campo image en el estado ad con el nombre del archivo
     } else {
@@ -370,28 +367,26 @@ export const AppProvider = ({ children }) => {
     }
     setAd(createdAd); // Actualiza el estado ad con los cambios realizados
   };
-  
+
   const handleSubmitCreateAd = async (e) => {
     e.preventDefault();
-  
+
     const formData = new FormData(); // Crea un nuevo objeto FormData
-  
+
     if (file) {
       formData.append("image", file); // Agrega el archivo de imagen al objeto FormData
     }
-  
+
     for (const key in ad) {
       if (ad[key] !== undefined && key != "image") {
         formData.append(key, ad[key]);
       }
     }
     createAd(formData);
-    setCreateAdId(!createAdId)
-    setMesageAdd(!mesageAdd)
-    setListUpdate(!listUpdate) // Envía el objeto FormData con la solicitud
+    setCreateAdId(!createAdId);
+    setMesageAdd(!mesageAdd);
+    setListUpdate(!listUpdate); // Envía el objeto FormData con la solicitud
   };
-
-
 
   const updateAd = async (formData, id) => {
     try {
@@ -400,7 +395,7 @@ export const AppProvider = ({ children }) => {
         formData,
         {
           headers: {
-            "x-access-token": getToken
+            "x-access-token": getToken,
           },
         }
       );
@@ -411,41 +406,40 @@ export const AppProvider = ({ children }) => {
     }
   };
 
-  const handleChangeUpdateAd = async(e) =>{
+  const handleChangeUpdateAd = async (e) => {
     const { name, value } = e.target;
-  
+
     const updatedAd = { ...ad }; // Copia el estado actual ad
-  
+
     if (name === "image") {
       setFile(e.target.files[0]); // Actualiza el estado file con el archivo de imagen
       updatedAd[name] = e.target.files[0].name; // Actualiza el campo image en el estado ad con el nombre del archivo
     } else {
       updatedAd[name] = value; // Actualiza el campo correspondiente en el estado ad con el valor del input
     }
-  
-    setAd(updatedAd); 
-  } 
+
+    setAd(updatedAd);
+  };
 
   const handleSubmitUpdateAd = (id) => {
     const formData = new FormData(); // Crea un nuevo objeto FormData
-  
+
     if (file) {
       formData.append("image", file); // Agrega el archivo de imagen al objeto FormData
     }
-  
+
     for (const key in ad) {
       if (ad[key] != "" && ad[key] != undefined && key != "image") {
         // Verifica si la propiedad está definida (no es null ni undefined)
         formData.append(key, ad[key]); // Agrega la propiedad y su valor al objeto FormData
       }
     }
-  
+
     updateAd(formData, id); // Envía el objeto FormData con la solicitud
     setUpdateAdId(!updateAdId);
     setMesageUpt(!mesageUpt);
     setListUpdate(!listUpdate);
   };
-  
 
   return (
     <appContext.Provider
@@ -512,7 +506,8 @@ export const AppProvider = ({ children }) => {
         mesageAdd,
         setMesageAdd,
         createAdId,
-        setCreateAdId
+        setCreateAdId,
+        messageDelete,
       }}
     >
       {children}
