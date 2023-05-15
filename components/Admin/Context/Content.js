@@ -262,18 +262,6 @@ export default function Content() {
                             </div>
                           </div>
                           {/* <!-- Modal footer --> */}
-                          <div class="flex justify-center items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                            <button
-                              type="submit"
-                              onClick={() => {
-                                deleteUser(getUser._id);
-                                setShowEditUser(!showEditUser);
-                              }}
-                              class="text-white bg-red-500 capitalize  hover:bg-red-800    font-medium rounded-lg text-sm px-5 py-2.5 text-center "
-                            >
-                              Eliminar
-                            </button>
-                          </div>
                         </form>
                       </div>
                     </div>
@@ -485,18 +473,6 @@ export default function Content() {
                             </div>
                           </div>
                           {/* <!-- Modal footer --> */}
-                          <div class="flex justify-center items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                            <button
-                              type="submit"
-                              onClick={() => {
-                                deleteUser(getUser._id);
-                                setShowEditUser(!showEditUser);
-                              }}
-                              class="text-white bg-red-500 capitalize  hover:bg-red-800    font-medium rounded-lg text-sm px-5 py-2.5 text-center "
-                            >
-                              Eliminar
-                            </button>
-                          </div>
                         </form>
                       </div>
                     </div>
