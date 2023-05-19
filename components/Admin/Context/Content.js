@@ -251,14 +251,21 @@ export default function Content() {
                             />
                             <div className="h-full capitalize flex flex-col gap-[0.3rem]">
                               <h1 className="text-white uppercase font-bold text-xl">
-                                {getUser.username}
+                                {getUser?.username}
                               </h1>
-                              <p>{getUser.email}</p>
-                              <p>{getUser.about}</p>
-                              <p>{getUser.country}</p>
-                              <p>{getUser.jobTitle}</p>
-                              <p>{getUser.sector}</p>
-                              <p>{getUser.city}</p>
+                              <p>{getUser?.email}</p>
+                              <p>{getUser?.about}</p>
+                              <p>{getUser?.country}</p>
+                              <p>{getUser?.jobTitle}</p>
+                              <p>{getUser?.sector}</p>
+                              <p>{getUser?.city}</p>
+                              <p>{getUser?.company}</p>
+                              <p>{getUser?.personalInfo?.fullName}</p>
+                              <p>{getUser?.personalInfo?.birthdate}</p>
+                              <p>{getUser?.personalInfo?.address}</p>
+                              <p>{getUser?.personalInfo?.phone}</p>
+                              <p>{getUser?.personalInfo?.linkedin}</p>
+                              <p>{getUser?.personalInfo?.website}</p>
                             </div>
                           </div>
                           {/* <!-- Modal footer --> */}
@@ -464,12 +471,12 @@ export default function Content() {
                             />
                             <div className="h-full capitalize flex flex-col gap-[0.3rem]">
                               <h1 className="text-white uppercase font-bold text-xl">
-                                {getAd.titulo}
+                                {getAd?.titulo}
                               </h1>
-                              <p>{getAd.tipo}</p>
-                              <p>{getAd.descripcion}</p>
-                              <p>{getAd.set}</p>
-                              <p>{getAd.url}</p>
+                              <p>{getAd?.tipo}</p>
+                              <p>{getAd?.descripcion}</p>
+                              <p>{getAd?.set}</p>
+                              <p>{getAd?.url}</p>
                             </div>
                           </div>
                           {/* <!-- Modal footer --> */}
