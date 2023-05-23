@@ -15,7 +15,7 @@ export default function NavBarP() {
             Home
           </li>
         </div>
-        <div className="py-[3rem] cursor-pointer">
+        {/* <div className="py-[3rem] cursor-pointer">
           <li
             id="ExpUser"
             onClick={handleNav}
@@ -32,7 +32,7 @@ export default function NavBarP() {
           >
             Educacion
           </li>
-        </div>
+        </div> */}
         <div className="py-[3rem] cursor-pointer">
           <li
             id="Personal"

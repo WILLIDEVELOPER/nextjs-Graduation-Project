@@ -3,11 +3,12 @@ import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 
 export default function NavbarU() {
-  const { handleNav, router, getAds, setGetAds, getAllAds, logOut } = useContext(appContext);
+  const { handleNav, router, getAds, setGetAds, getAllAds, logOut } =
+    useContext(appContext);
   const [showMenu, setShowMenu] = useState(false);
 
-  const [getUser, setGetUser] = useState({})
-  const [getToken, setGetToken] = useState("")
+  const [getUser, setGetUser] = useState({});
+  const [getToken, setGetToken] = useState("");
 
   const [getUsuario, setGetUsuario] = useState([]);
   const [getAdmin, setGetAdmin] = useState([]);
@@ -21,7 +22,7 @@ export default function NavbarU() {
     }
   }
 
-  const getUserById = async(id) =>{
+  const getUserById = async (id) => {
     if (id) {
       try {
         const { data: resUser } = await axios.get(
@@ -33,35 +34,34 @@ export default function NavbarU() {
           }
         );
         console.log(resUser);
-        setGetUser(resUser)
+        setGetUser(resUser);
       } catch (error) {
         console.log(error);
       }
     }
-  }
+  };
 
   useEffect(() => {
     const userData = localStorage.getItem("usuario");
-    const token = localStorage.getItem("token")
+    const token = localStorage.getItem("token");
     if (userData) {
       setGetUsuario(JSON.parse(userData));
-      setGetToken(token)
+      setGetToken(token);
     }
 
     const adminData = localStorage.getItem("admin");
     if (adminData) {
       setGetAdmin(JSON.parse(adminData));
-      setGetToken(token)
+      setGetToken(token);
     }
 
     if (getAdmin) {
-      getUserById(getAdmin._id)
+      getUserById(getAdmin._id);
     }
 
     if (getUsuario) {
-      getUserById(getUsuario._id)
+      getUserById(getUsuario._id);
     }
-
   }, []);
 
   return (
@@ -81,53 +81,57 @@ export default function NavbarU() {
             </li>
             <div className="w-full flex justify-center ">
               <div className="flex gap-[1rem] capitalize">
-                <li className="cursor-pointer"
+                <li
+                  className="cursor-pointer"
                   onClick={() => {
                     const filtro = getAds.filter((ad) => ad.tipo == "eventos");
                     if (filtro.length > 0) {
-                      setGetAds(filtro)
-                    }else{
-                      getAllAds()
+                      setGetAds(filtro);
+                    } else {
+                      getAllAds();
                     }
-                    
+
                     console.log(filtro);
                   }}
                 >
                   eventos
                 </li>
-                <li className="cursor-pointer"
+                <li
+                  className="cursor-pointer"
                   onClick={() => {
                     const filtro = getAds.filter((ad) => ad.tipo == "noticias");
                     if (filtro.length > 0) {
-                      setGetAds(filtro)
-                    }else{
-                      getAllAds()
+                      setGetAds(filtro);
+                    } else {
+                      getAllAds();
                     }
                     console.log(filtro);
                   }}
                 >
                   noticias
                 </li>
-                <li className="cursor-pointer"
+                <li
+                  className="cursor-pointer"
                   onClick={() => {
                     const filtro = getAds.filter((ad) => ad.tipo == "cursos");
                     if (filtro.length > 0) {
-                      setGetAds(filtro)
-                    }else{
-                      getAllAds()
+                      setGetAds(filtro);
+                    } else {
+                      getAllAds();
                     }
                     console.log(filtro);
                   }}
                 >
                   cursos
                 </li>
-                <li className="cursor-pointer"
+                <li
+                  className="cursor-pointer"
                   onClick={() => {
                     const filtro = getAds.filter((ad) => ad.tipo == "empleo");
                     if (filtro.length > 0) {
-                      setGetAds(filtro)
-                    }else{
-                      getAllAds()
+                      setGetAds(filtro);
+                    } else {
+                      getAllAds();
                     }
                     console.log(filtro);
                   }}
@@ -139,14 +143,18 @@ export default function NavbarU() {
           </ul>
         </div>
         <h1 className="capitalize font-bold text-xl">
-                {getUser.username}
+          {getAdmin ? getAdmin?.username : getUser?.username}
         </h1>
         <div className="relative hover:bg-red-50 rounded-full">
           <img
             className="w-[4rem] rounded-full cursor-pointer"
             src={
-              isValidJson(getUser.profileImage)
-                ? JSON.parse(getUser.profileImage)?.url
+              isValidJson(
+                getAdmin ? getAdmin?.profileImage : getUser.profileImage
+              )
+                ? JSON.parse(
+                    getAdmin ? getAdmin?.profileImage : getUser?.profileImage
+                  )?.url
                 : "https://i.imgur.com/gxw3HHE.png"
             }
             alt=""
@@ -163,7 +171,9 @@ export default function NavbarU() {
                 >
                   Perfil
                 </li>
-                <li onClick={logOut}  className="cursor-pointer">Cerrar Sesion</li>
+                <li onClick={logOut} className="cursor-pointer">
+                  Cerrar Sesion
+                </li>
               </ul>
             </div>
           )}

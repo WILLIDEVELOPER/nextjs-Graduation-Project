@@ -1,8 +1,10 @@
 import { appContext } from "@/Context/AppContext";
+import { useRouter } from "next/router";
 import { useContext } from "react";
 
 export default function NavBar() {
   const { handleNav, logOut } = useContext(appContext);
+  const router = useRouter();
   return (
     <div className="p-[2rem] flex flex-col font-bold text-xl  justify-between gap-[2rem] text-center text-white bg-[#161520] w-[13rem]  h-screen">
       <div>
@@ -22,6 +24,17 @@ export default function NavBar() {
             className="list-none hover:bg-slate-400 py-[0.5rem] rounded-xl px-[0.5rem]"
           >
             Anuncios
+          </li>
+        </div>
+        <div className="py-[3rem] cursor-pointer">
+          <li
+            id="perfil"
+            onClick={() => {
+              router.push("./profile");
+            }}
+            className="list-none hover:bg-slate-400 py-[0.5rem] rounded-xl px-[0.5rem]"
+          >
+            Perfil
           </li>
         </div>
       </div>

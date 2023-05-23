@@ -28,7 +28,9 @@ export default function ContentU() {
             <p className="text-justify">{ad.descripcion}</p>
             <div className="w-full flex justify-between">
               <h2 className="capitalize font-bold">{ad.tipo}</h2>
-              <button>Detalles</button>
+              <a href={ad?.url} className="font-bold cursor-pointer">
+                Detalles
+              </a>
             </div>
           </div>
         </div>

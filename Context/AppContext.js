@@ -369,23 +369,24 @@ export const AppProvider = ({ children }) => {
   };
 
   const handleSubmitCreateAd = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(); // Crea un nuevo objeto FormData
+    // Crea un nuevo objeto FormData
+    const formData = new FormData();
 
     if (file) {
       formData.append("image", file); // Agrega el archivo de imagen al objeto FormData
     }
 
     for (const key in ad) {
-      if (ad[key] !== undefined && key != "image") {
-        formData.append(key, ad[key]);
+      if (ad[key] != "" && ad[key] != undefined && key != "image") {
+        // Verifica si la propiedad está definida (no es null ni undefined)
+        formData.append(key, ad[key]); // Agrega la propiedad y su valor al objeto FormData
       }
     }
-    createAd(formData);
+
+    createAd(formData); // Envía el objeto FormData con la solicitud
     setCreateAdId(!createAdId);
     setMesageAdd(!mesageAdd);
-    setListUpdate(!listUpdate); // Envía el objeto FormData con la solicitud
+    setListUpdate(!listUpdate);
   };
 
   const updateAd = async (formData, id) => {

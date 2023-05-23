@@ -80,33 +80,33 @@ export default function Content() {
         style={style}
         className="p-[2rem] flex flex-col gap-[2rem] justify-center items-center text-white font-bold text-[16px]"
       >
-        <div class="w-full h-full relative overflow-x-auto  ">
-          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-white font-bold uppercase bg-[#8F43EE] ">
+        <div className="w-full h-full relative overflow-x-auto  ">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-white font-bold uppercase bg-[#8F43EE] ">
               <tr>
-                <th scope="col" class="px-6 py-3 text-center">
+                <th scope="col" className="px-6 py-3 text-center">
                   Nombre
                 </th>
-                <th scope="col" class="px-6 py-3 ">
+                <th scope="col" className="px-6 py-3 ">
                   Cargo
                 </th>
-                <th scope="col" class="px-6 py-3 ">
+                <th scope="col" className="px-6 py-3 ">
                   Pais
                 </th>
-                <th scope="col" class="px-6 py-3 ">
+                <th scope="col" className="px-6 py-3 ">
                   Acciones
                 </th>
               </tr>
             </thead>
             <tbody className="bg-[#161520]">
               {getUsers.map((user) => (
-                <tr key={user._id} class=" hover:bg-[#2c2b38]">
+                <tr key={user?._id} className=" hover:bg-[#2c2b38]">
                   <th
                     scope="row"
-                    class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                    className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     <img
-                      class="w-10 h-10 rounded-full"
+                      className="w-10 h-10 rounded-full"
                       src={
                         isValidJson(user.profileImage)
                           ? JSON.parse(user.profileImage)?.url
@@ -115,19 +115,23 @@ export default function Content() {
                       alt="Jese image"
                     />
 
-                    <div class="pl-3">
-                      <div class="text-base font-semibold">{user.username}</div>
-                      <div class="font-normal text-gray-500">{user.email}</div>
+                    <div className="pl-3">
+                      <div className="text-base font-semibold">
+                        {user?.username}
+                      </div>
+                      <div className="font-normal text-gray-500">
+                        {user?.email}
+                      </div>
                     </div>
                   </th>
-                  <td class="px-6 py-4 text-white">{user.jobTitle}</td>
-                  <td class="px-6 py-4">
-                    <div class="flex capitalize items-center text-white">
-                      <div class="h-2.5 w-2.5  rounded-full bg-green-500 mr-2"></div>
-                      {user.country}
+                  <td className="px-6 py-4 text-white">{user?.jobTitle}</td>
+                  <td className="px-6 py-4">
+                    <div className="flex capitalize items-center text-white">
+                      <div className="h-2.5 w-2.5  rounded-full bg-green-500 mr-2"></div>
+                      {user?.country}
                     </div>
                   </td>
-                  <td class=" flex  gap-[0.7rem] px-6 py-4">
+                  <td className=" flex  gap-[0.7rem] px-6 py-4">
                     <a
                       type="button"
                       onClick={() => {
@@ -137,7 +141,7 @@ export default function Content() {
                         setGetUser(usuario);
                         setShowEditUser(!showEditUser);
                       }}
-                      class="font-medium cursor-pointer py-[0.3rem] px-[0.6rem]  bg-blue-500 text-white rounded-md  hover:underline"
+                      className="font-medium cursor-pointer py-[0.3rem] px-[0.6rem]  bg-blue-500 text-white rounded-md  hover:underline"
                     >
                       Ver
                     </a>
@@ -147,19 +151,19 @@ export default function Content() {
                         deleteUser(user._id);
                         setMesage(!mesage);
                       }}
-                      class="font-medium cursor-pointer text-white py-[0.3rem] px-[0.6rem] bg-red-500 rounded-md  hover:underline"
+                      className="font-medium cursor-pointer text-white py-[0.3rem] px-[0.6rem] bg-red-500 rounded-md  hover:underline"
                     >
                       Eliminar
                     </a>
                   </td>
                   {mesage && (
-                    <div class="fixed  z-50 flex    justify-center  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
-                      <div class="relative  w-full h-full max-w-2xl md:h-auto">
+                    <div className="fixed  z-50 flex    justify-center  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
+                      <div className="relative  w-full h-full max-w-2xl md:h-auto">
                         {/* <!-- Modal content --> */}
-                        <form class="relative bg-[#161520] rounded-lg shadow ">
+                        <form className="relative bg-[#161520] rounded-lg shadow ">
                           {/* <!-- Modal header --> */}
-                          <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                            <h3 class="text-xl font-bold text-white">
+                          <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                            <h3 className="text-xl font-bold text-white">
                               Mensaje De Respuesta
                             </h3>
                             <button
@@ -167,11 +171,11 @@ export default function Content() {
                               onClick={() => {
                                 setMesage(!mesage);
                               }}
-                              class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                               <svg
                                 aria-hidden="true"
-                                class="w-5 h-5"
+                                className="w-5 h-5"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -185,18 +189,18 @@ export default function Content() {
                             </button>
                           </div>
                           {/* <!-- Modal body --> */}
-                          <div class="p-6   flex gap-[0.5rem]">
+                          <div className="p-6   flex gap-[0.5rem]">
                             <p>{messageDelete}</p>
                           </div>
                           {/* <!-- Modal footer --> */}
-                          <div class="flex justify-center items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                          <div className="flex justify-center items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                             <button
                               type="submit"
                               onClick={() => {
                                 setMesage(!mesage);
                                 setListUpdate(!listUpdate);
                               }}
-                              class="text-white bg-blue-500 capitalize  hover:bg-red-800    font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+                              className="text-white bg-blue-500 capitalize  hover:bg-red-800    font-medium rounded-lg text-sm px-5 py-2.5 text-center "
                             >
                               Aceptar
                             </button>
@@ -207,13 +211,13 @@ export default function Content() {
                   )}
 
                   {showEditUser && (
-                    <div class="fixed  z-50 flex    justify-center  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
-                      <div class="relative  w-full h-full max-w-2xl md:h-auto">
+                    <div className="fixed  z-50 flex    justify-center  w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-[calc(100%-1rem)] md:h-full">
+                      <div className="relative  w-full h-full max-w-2xl md:h-auto">
                         {/* <!-- Modal content --> */}
-                        <form class="relative bg-[#161520] rounded-lg shadow ">
+                        <form className="relative bg-[#161520] rounded-lg shadow ">
                           {/* <!-- Modal header --> */}
-                          <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                            <h3 class="text-xl font-bold text-white">
+                          <div className="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                            <h3 className="text-xl font-bold text-white">
                               Ver Usuario
                             </h3>
                             <button
@@ -221,11 +225,11 @@ export default function Content() {
                               onClick={() => {
                                 setShowEditUser(!showEditUser);
                               }}
-                              class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
+                              className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
                             >
                               <svg
                                 aria-hidden="true"
-                                class="w-5 h-5"
+                                className="w-5 h-5"
                                 fill="currentColor"
                                 viewBox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -239,33 +243,67 @@ export default function Content() {
                             </button>
                           </div>
                           {/* <!-- Modal body --> */}
-                          <div class="p-6   flex gap-[0.5rem]">
-                            <img
-                              class="w-[40%] rounded-full"
-                              src={
-                                isValidJson(getUser.profileImage)
-                                  ? JSON.parse(getUser.profileImage)?.url
-                                  : "https://i.imgur.com/gxw3HHE.png"
-                              }
-                              alt="Jese image"
-                            />
+                          <div className="p-6 h-full  flex items-center gap-[0.5rem]">
+                            <div className="h-full p-2">
+                              <img
+                                className=" rounded-full"
+                                src={
+                                  isValidJson(getUser.profileImage)
+                                    ? JSON.parse(getUser.profileImage)?.url
+                                    : "https://i.imgur.com/gxw3HHE.png"
+                                }
+                                alt="Jese image"
+                              />
+                            </div>
                             <div className="h-full capitalize flex flex-col gap-[0.3rem]">
                               <h1 className="text-white uppercase font-bold text-xl">
-                                {getUser?.username}
+                                Nombre: {getUser?.username}
                               </h1>
-                              <p>{getUser?.email}</p>
-                              <p>{getUser?.about}</p>
-                              <p>{getUser?.country}</p>
-                              <p>{getUser?.jobTitle}</p>
-                              <p>{getUser?.sector}</p>
-                              <p>{getUser?.city}</p>
-                              <p>{getUser?.company}</p>
-                              <p>{getUser?.personalInfo?.fullName}</p>
-                              <p>{getUser?.personalInfo?.birthdate}</p>
-                              <p>{getUser?.personalInfo?.address}</p>
-                              <p>{getUser?.personalInfo?.phone}</p>
-                              <p>{getUser?.personalInfo?.linkedin}</p>
-                              <p>{getUser?.personalInfo?.website}</p>
+                              <p className="capitalize">
+                                email: {getUser?.email}
+                              </p>
+                              <p className="capitalize">
+                                acerca de: {getUser?.about}
+                              </p>
+                              <p className="capitalize">
+                                pais: {getUser?.country}
+                              </p>
+                              <p className="capitalize">
+                                cargo: {getUser?.jobTitle}
+                              </p>
+                              <p className="capitalize">
+                                sector: {getUser?.sector}
+                              </p>
+                              <p className="capitalize">
+                                ciudad: {getUser?.city}
+                              </p>
+                              <p className="capitalize">
+                                compañia: {getUser?.company}
+                              </p>
+                              <br />
+                              <p className="font-bold text-white">
+                                Personal info:{" "}
+                              </p>
+                              <br />
+                              <p className="capitalize">
+                                Nombre completo:{" "}
+                                {getUser?.personalInfo?.fullName}
+                              </p>
+                              <p className="capitalize">
+                                cumpleaños: {getUser?.personalInfo?.birthdate}
+                              </p>
+                              <p className="capitalize">
+                                direccion: {getUser?.personalInfo?.address}
+                              </p>
+                              <p className="capitalize">
+                                telefono: {getUser?.personalInfo?.phone}
+                              </p>
+                              <p className="capitalize">
+                                linkedin: {getUser?.personalInfo?.linkedin}
+                              </p>
+                              <p className="capitalize">
+                                sitio web: {getUser?.personalInfo?.website}
+                              </p>
                             </div>
                           </div>
                           {/* <!-- Modal footer --> */}
@@ -287,33 +325,33 @@ export default function Content() {
         style={style}
         className="p-[2rem] flex flex-col gap-[2rem] justify-center items-center text-white font-bold text-[16px]"
       >
-        <div class="w-full h-full relative overflow-x-auto  ">
-          <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead class="text-xs text-white font-bold uppercase bg-[#8F43EE] ">
+        <div className="w-full h-full relative overflow-x-auto  ">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-white font-bold uppercase bg-[#8F43EE] ">
               <tr>
-                <th scope="col" class="px-6 py-3 text-center">
+                <th scope="col" className="px-6 py-3 text-center">
                   Titulo
                 </th>
-                <th scope="col" class="px-6 py-3 ">
+                <th scope="col" className="px-6 py-3 ">
                   Descripcion
                 </th>
-                <th scope="col" class="px-6 py-3 ">
+                <th scope="col" className="px-6 py-3 ">
                   Estado
                 </th>
-                <th scope="col" class="px-6 py-3 ">
+                <th scope="col" className="px-6 py-3 ">
                   Acciones
                 </th>
               </tr>
             </thead>
             <tbody className="bg-[#161520]">
               {getAds.map((ad) => (
-                <tr key={ad._id} class=" hover:bg-[#2c2b38]">
+                <tr key={ad?._id} className=" hover:bg-[#2c2b38]">
                   <th
                     scope="row"
-                    class="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
+                    className="flex items-center px-6 py-4 text-gray-900 whitespace-nowrap dark:text-white"
                   >
                     <img
-                      class="w-10 h-10 rounded-full"
+                      className="w-10 h-10 rounded-full"
                       src={
                         isValidJson(ad.image)
                           ? JSON.parse(ad.image)?.url
@@ -323,15 +361,15 @@ export default function Content() {
                     />
 
                     <div class="pl-3">
-                      <div class="text-base font-semibold">{ad.titulo}</div>
-                      <div class="font-normal text-gray-500">{ad.tipo}</div>
+                      <div class="text-base font-semibold">{ad?.titulo}</div>
+                      <div class="font-normal text-gray-500">{ad?.tipo}</div>
                     </div>
                   </th>
-                  <td class="px-6 py-4 text-white">{ad.descripcion}</td>
+                  <td class="px-6 py-4 text-white">{ad?.descripcion}</td>
                   <td class="px-6 py-4">
                     <div class="flex capitalize items-center text-white">
                       <div class="h-2.5 w-2.5  rounded-full bg-green-500 mr-2"></div>
-                      {ad.set}
+                      {ad?.set}
                     </div>
                   </td>
                   <td class=" flex  gap-[0.7rem] px-6 py-4">
@@ -351,7 +389,7 @@ export default function Content() {
                     <a
                       type="button"
                       onClick={() => {
-                        deleteAd(ad._id);
+                        deleteAd(ad?._id);
                         setMesage(!mesage);
                         setListUpdate(!listUpdate);
                       }}
@@ -540,7 +578,7 @@ export default function Content() {
                   )}
 
                   {updateAdId && (
-                    <div class="fixed  z-10 flex    justify-center p-10  w-full   md:inset-0 h-[calc(100%-1rem)] ">
+                    <div class="fixed  z-10 flex   justify-center  w-full   md:inset-0  ">
                       <div class="relative w-full h-full max-w-2xl md:h-auto">
                         {/* <!-- Modal content --> */}
                         <form
@@ -678,7 +716,7 @@ export default function Content() {
             </div>
           </div>
           {createAdId && (
-            <div class="fixed  z-10 flex    justify-center p-10  w-full   md:inset-0 h-[calc(100%-1rem)] ">
+            <div class="fixed  z-10 flex    justify-center  w-full   md:inset-0 h-[calc(100%-1rem)] ">
               <div class="relative w-full h-full max-w-2xl md:h-auto">
                 {/* <!-- Modal content --> */}
                 <form
@@ -757,7 +795,7 @@ export default function Content() {
                         <input
                           type="file"
                           name="image"
-                          onChange={handleChangeCreateAd}
+                          onChange={handleChangeUpdateAd}
                           className="focus:outline-none block w-full text-lg cursor-pointer bg-transparent border-solid border-[1px] rounded-md placeholder:capitalize border-slate-600 "
                           ref={inputFileRef}
                         />
